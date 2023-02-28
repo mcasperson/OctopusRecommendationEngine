@@ -39,7 +39,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 		if len(projects) > maxProjectsInDefaultGroup {
 			return checks.NewOctopusCheckResultImpl(
 				"The default project group contains "+fmt.Sprint(len(projects))+" projects. You may want to organize these projects into additional project groups.",
-				"OctopusRecommendationDefaultProjectGroupChildCount",
+				"OctoRecDefaultProjectGroupChildCount",
 				"",
 				checks.Warning,
 				checks.Organization), nil
@@ -48,7 +48,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 
 	return checks.NewOctopusCheckResultImpl(
 		"The number of projects in the default project group is OK",
-		"OctopusRecommendationDefaultProjectGroupChildCount",
+		"OctoRecDefaultProjectGroupChildCount",
 		"",
 		checks.Ok,
 		checks.Organization), nil

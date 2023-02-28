@@ -9,14 +9,14 @@ type alwaysFailCheck struct {
 }
 
 func (o alwaysFailCheck) Execute() (checks.OctopusCheckResult, error) {
-	return checks.NewOctopusCheckResultImpl("This check always fails", "OctopusRecommendationAlwaysFail", "", checks.Error, ""), nil
+	return checks.NewOctopusCheckResultImpl("This check always fails", "OctoRecAlwaysFail", "", checks.Error, ""), nil
 }
 
 type alwaysPassCheck struct {
 }
 
 func (o alwaysPassCheck) Execute() (checks.OctopusCheckResult, error) {
-	return checks.NewOctopusCheckResultImpl("This check passed ok", "OctopusRecommendationAlwaysPass", "", checks.Ok, ""), nil
+	return checks.NewOctopusCheckResultImpl("This check passed ok", "OctoRecAlwaysPass", "", checks.Ok, ""), nil
 }
 
 func TestNoChecks(t *testing.T) {

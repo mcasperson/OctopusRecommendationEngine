@@ -37,7 +37,7 @@ func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, erro
 	if len(resources.Items) > maxEnvironments {
 		return checks.NewOctopusCheckResultImpl(
 			"The recommended maximum number of environments is "+fmt.Sprint(maxEnvironments)+". You have at least "+fmt.Sprint(len(resources.Items)),
-			"OctopusRecommendationEnvironmentCount",
+			"OctoRecEnvironmentCount",
 			"https://octopus.com/docs/getting-started/best-practices/environments-and-deployment-targets-and-roles#environments",
 			checks.Warning,
 			checks.Organization), nil
@@ -45,7 +45,7 @@ func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, erro
 
 	return checks.NewOctopusCheckResultImpl(
 		"The number of environments in the space is OK",
-		"OctopusRecommendationEnvironmentCount",
+		"OctoRecEnvironmentCount",
 		"https://octopus.com/docs/getting-started/best-practices/environments-and-deployment-targets-and-roles#environments",
 		checks.Ok,
 		checks.Organization), nil

@@ -18,42 +18,42 @@ func TestNoChecks(t *testing.T) {
 }
 
 func TestFailChecks(t *testing.T) {
-	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctopusRecommendationAlwaysFail", "", checks.Error, "")
+	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctoRecAlwaysFail", "", checks.Error, "")
 	results, err := OctopusPlainCheckReporter{minSeverity: checks.Error}.Generate([]checks.OctopusCheckResult{failedResult})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "OctopusRecommendationAlwaysFail: This check always fails" {
+	if results != "OctoRecAlwaysFail: This check always fails" {
 		t.Fatal("Should have returned 1 results")
 	}
 }
 
 func TestFailAndPassChecks(t *testing.T) {
-	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctopusRecommendationAlwaysFail", "", checks.Error, "")
-	passResult := checks.NewOctopusCheckResultImpl("This check always passes", "OctopusRecommendationAlwaysPass", "", checks.Ok, "")
+	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctoRecAlwaysFail", "", checks.Error, "")
+	passResult := checks.NewOctopusCheckResultImpl("This check always passes", "OctoRecAlwaysPass", "", checks.Ok, "")
 	results, err := OctopusPlainCheckReporter{minSeverity: checks.Error}.Generate([]checks.OctopusCheckResult{failedResult, passResult})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "OctopusRecommendationAlwaysFail: This check always fails" {
+	if results != "OctoRecAlwaysFail: This check always fails" {
 		t.Fatal("Should have returned 1 results")
 	}
 }
 
 func TestFailAndPassWithOkChecks(t *testing.T) {
-	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctopusRecommendationAlwaysFail", "", checks.Error, "")
-	passResult := checks.NewOctopusCheckResultImpl("This check always passes", "OctopusRecommendationAlwaysPass", "", checks.Ok, "")
+	failedResult := checks.NewOctopusCheckResultImpl("This check always fails", "OctoRecAlwaysFail", "", checks.Error, "")
+	passResult := checks.NewOctopusCheckResultImpl("This check always passes", "OctoRecAlwaysPass", "", checks.Ok, "")
 	results, err := OctopusPlainCheckReporter{minSeverity: checks.Ok}.Generate([]checks.OctopusCheckResult{failedResult, passResult})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "OctopusRecommendationAlwaysFail: This check always fails\nOctopusRecommendationAlwaysPass: This check always passes" {
+	if results != "OctoRecAlwaysFail: This check always fails\nOctopusRecommendationAlwaysPass: This check always passes" {
 		t.Fatal("Should have returned 1 results")
 	}
 }
