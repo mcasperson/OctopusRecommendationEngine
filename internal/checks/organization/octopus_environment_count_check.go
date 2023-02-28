@@ -24,7 +24,7 @@ func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, erro
 	}
 
 	query := environments.EnvironmentsQuery{
-		PartialName: "Development",
+		PartialName: "",
 		Skip:        0,
 		Take:        1000,
 	}
