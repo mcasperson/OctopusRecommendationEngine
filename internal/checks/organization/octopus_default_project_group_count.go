@@ -17,6 +17,10 @@ func NewOctopusDefaultProjectGroupCountCheck(client *client.Client) OctopusDefau
 	return OctopusDefaultProjectGroupCountCheck{client: client}
 }
 
+func (o OctopusDefaultProjectGroupCountCheck) Id() string {
+	return "OctoRecDefaultProjectGroupChildCount"
+}
+
 func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResult, error) {
 	if o.client == nil {
 		return nil, errors.New("octoclient is nil")
@@ -39,7 +43,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 		if len(projects) > maxProjectsInDefaultGroup {
 			return checks.NewOctopusCheckResultImpl(
 				"The default project group contains "+fmt.Sprint(len(projects))+" projects. You may want to organize these projects into additional project groups.",
-				"OctoRecDefaultProjectGroupChildCount",
+				o.Id(),
 				"",
 				checks.Warning,
 				checks.Organization), nil
@@ -48,7 +52,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 
 	return checks.NewOctopusCheckResultImpl(
 		"The number of projects in the default project group is OK",
-		"OctoRecDefaultProjectGroupChildCount",
+		o.Id(),
 		"",
 		checks.Ok,
 		checks.Organization), nil

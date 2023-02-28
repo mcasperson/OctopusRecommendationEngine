@@ -1,6 +1,9 @@
 package executor
 
-import "github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+import (
+	"github.com/avast/retry-go/v4"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+)
 
 type OctopusCheckExecutor struct {
 }
@@ -9,7 +12,8 @@ func NewOctopusCheckExecutor() OctopusCheckExecutor {
 	return OctopusCheckExecutor{}
 }
 
-func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusCheck) ([]checks.OctopusCheckResult, error) {
+// ExecuteChecks executes each check and collects the results.
+func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusCheck, handleError func(checks.OctopusCheck) error) ([]checks.OctopusCheckResult, error) {
 	if checkCollection == nil || len(checkCollection) == 0 {
 		return []checks.OctopusCheckResult{}, nil
 	}
@@ -17,13 +21,25 @@ func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusChec
 	checkResults := []checks.OctopusCheckResult{}
 
 	for _, c := range checkCollection {
-		result, err := c.Execute()
+		err := retry.Do(
+			func() error {
+				result, err := c.Execute()
+
+				if err != nil {
+					return err
+				}
+
+				checkResults = append(checkResults, result)
+
+				return nil
+			}, retry.Attempts(3))
 
 		if err != nil {
-			return nil, err
+			err := handleError(c)
+			if err != nil {
+				return nil, err
+			}
 		}
-
-		checkResults = append(checkResults, result)
 	}
 
 	return checkResults, nil

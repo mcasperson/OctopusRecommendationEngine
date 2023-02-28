@@ -27,7 +27,10 @@ func main() {
 	}
 
 	executor := executor.NewOctopusCheckExecutor()
-	results, err := executor.ExecuteChecks(checkCollection)
+	results, err := executor.ExecuteChecks(checkCollection, func(check checks.OctopusCheck) error {
+		fmt.Println("Failed to execute check " + check.Id())
+		return nil
+	})
 
 	if err != nil {
 		errorExit("Failed to run the checks")
