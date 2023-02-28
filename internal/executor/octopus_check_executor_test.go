@@ -9,18 +9,28 @@ type alwaysFailCheck struct {
 }
 
 func (o alwaysFailCheck) Execute() (checks.OctopusCheckResult, error) {
-	return checks.NewOctopusCheckResultImpl("This check always fails", "OctoRecAlwaysFail", "", checks.Error, ""), nil
+	return checks.NewOctopusCheckResultImpl("This check always fails", o.Id(), "", checks.Error, ""), nil
+}
+
+func (o alwaysFailCheck) Id() string {
+	return "OctoRecAlwaysFail"
 }
 
 type alwaysPassCheck struct {
 }
 
 func (o alwaysPassCheck) Execute() (checks.OctopusCheckResult, error) {
-	return checks.NewOctopusCheckResultImpl("This check passed ok", "OctoRecAlwaysPass", "", checks.Ok, ""), nil
+	return checks.NewOctopusCheckResultImpl("This check passed ok", o.Id(), "", checks.Ok, ""), nil
+}
+
+func (o alwaysPassCheck) Id() string {
+	return "OctoRecAlwaysPass"
 }
 
 func TestNoChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks(nil)
+	results, err := OctopusCheckExecutor{}.ExecuteChecks(nil, func(check checks.OctopusCheck) error {
+		return nil
+	})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
@@ -32,7 +42,9 @@ func TestNoChecks(t *testing.T) {
 }
 
 func TestFailChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}})
+	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}}, func(check checks.OctopusCheck) error {
+		return nil
+	})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
@@ -44,7 +56,9 @@ func TestFailChecks(t *testing.T) {
 }
 
 func TestFailAndPassChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}, alwaysPassCheck{}})
+	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}, alwaysPassCheck{}}, func(check checks.OctopusCheck) error {
+		return nil
+	})
 
 	if err != nil {
 		t.Fatal("Should not have returned an error")
