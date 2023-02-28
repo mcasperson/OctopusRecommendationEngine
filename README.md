@@ -13,7 +13,8 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 
 ## Checks
 
-| Check ID                             | Description                                                |
-|--------------------------------------|------------------------------------------------------------|
-| OctoRecEnvironmentCount              | Counts the number of environments in the space.            |
- | OctoRecDefaultProjectGroupChildCount | Counts the number of projects in the default project group |
+| Check ID                             | Description                                                 |
+|--------------------------------------|-------------------------------------------------------------|
+| OctoRecEnvironmentCount              | Counts the number of environments in the space.             |
+ | OctoRecDefaultProjectGroupChildCount | Counts the number of projects in the default project group. |
+ | OctoRecEmptyProject                  | Finds projects with no deployment process and no runbooks.  |

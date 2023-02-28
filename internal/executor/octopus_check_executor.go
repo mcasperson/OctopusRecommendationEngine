@@ -13,7 +13,7 @@ func NewOctopusCheckExecutor() OctopusCheckExecutor {
 }
 
 // ExecuteChecks executes each check and collects the results.
-func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusCheck, handleError func(checks.OctopusCheck) error) ([]checks.OctopusCheckResult, error) {
+func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusCheck, handleError func(checks.OctopusCheck, error) error) ([]checks.OctopusCheckResult, error) {
 	if checkCollection == nil || len(checkCollection) == 0 {
 		return []checks.OctopusCheckResult{}, nil
 	}
@@ -35,7 +35,7 @@ func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusChec
 			}, retry.Attempts(3))
 
 		if err != nil {
-			err := handleError(c)
+			err := handleError(c, err)
 			if err != nil {
 				return nil, err
 			}
