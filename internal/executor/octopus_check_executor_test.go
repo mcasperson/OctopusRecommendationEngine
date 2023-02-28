@@ -28,7 +28,7 @@ func (o alwaysPassCheck) Id() string {
 }
 
 func TestNoChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks(nil, func(check checks.OctopusCheck) error {
+	results, err := OctopusCheckExecutor{}.ExecuteChecks(nil, func(check checks.OctopusCheck, err error) error {
 		return nil
 	})
 
@@ -42,7 +42,7 @@ func TestNoChecks(t *testing.T) {
 }
 
 func TestFailChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}}, func(check checks.OctopusCheck) error {
+	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}}, func(check checks.OctopusCheck, err error) error {
 		return nil
 	})
 
@@ -56,7 +56,7 @@ func TestFailChecks(t *testing.T) {
 }
 
 func TestFailAndPassChecks(t *testing.T) {
-	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}, alwaysPassCheck{}}, func(check checks.OctopusCheck) error {
+	results, err := OctopusCheckExecutor{}.ExecuteChecks([]checks.OctopusCheck{alwaysFailCheck{}, alwaysPassCheck{}}, func(check checks.OctopusCheck, err error) error {
 		return nil
 	})
 
