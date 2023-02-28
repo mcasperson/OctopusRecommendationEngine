@@ -9,6 +9,10 @@ type OctopusPlainCheckReporter struct {
 	minSeverity int
 }
 
+func NewOctopusPlainCheckReporter(minSeverity int) OctopusPlainCheckReporter {
+	return OctopusPlainCheckReporter{minSeverity: minSeverity}
+}
+
 func (o OctopusPlainCheckReporter) Generate(results []checks.OctopusCheckResult) (string, error) {
 	if results == nil || len(results) == 0 {
 		return "", nil
@@ -20,6 +24,10 @@ func (o OctopusPlainCheckReporter) Generate(results []checks.OctopusCheckResult)
 		if r.Severity() >= o.minSeverity {
 			report = append(report, r.Code()+": "+r.Description())
 		}
+	}
+
+	if len(report) == 0 {
+		return "No issues detected", nil
 	}
 
 	return strings.Join(report[:], "\n"), nil

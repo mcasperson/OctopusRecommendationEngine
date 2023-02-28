@@ -4,6 +4,7 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"path/filepath"
 	"testing"
 )
@@ -17,7 +18,7 @@ func TestNormalEnvironmentCount(t *testing.T) {
 			return err
 		}
 
-		newSpaceClient, err := test.CreateClient(container.URI, newSpaceId)
+		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.ApiKey)
 
 		if err != nil {
 			return err
@@ -49,7 +50,7 @@ func TestExcessiveEnvironmentCount(t *testing.T) {
 			return err
 		}
 
-		newSpaceClient, err := test.CreateClient(container.URI, newSpaceId)
+		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.ApiKey)
 
 		if err != nil {
 			return err

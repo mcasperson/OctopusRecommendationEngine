@@ -5,6 +5,10 @@ import "github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 type OctopusCheckExecutor struct {
 }
 
+func NewOctopusCheckExecutor() OctopusCheckExecutor {
+	return OctopusCheckExecutor{}
+}
+
 func (o OctopusCheckExecutor) ExecuteChecks(checkCollection []checks.OctopusCheck) ([]checks.OctopusCheckResult, error) {
 	if checkCollection == nil || len(checkCollection) == 0 {
 		return []checks.OctopusCheckResult{}, nil

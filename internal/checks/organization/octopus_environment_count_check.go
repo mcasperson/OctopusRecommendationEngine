@@ -20,7 +20,7 @@ func NewOctopusEnvironmentCountCheck(client *client.Client) OctopusEnvironmentCo
 
 func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, error) {
 	if o.client == nil {
-		return nil, errors.New("client is nil")
+		return nil, errors.New("octoclient is nil")
 	}
 
 	query := environments.EnvironmentsQuery{

@@ -10,7 +10,6 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -371,17 +370,6 @@ func getOutputVariable(t *testing.T, terraformDir string, outputVar string) (str
 	}
 
 	return string(out), nil
-}
-
-// CreateClient creates a Octopus client to the given url
-func CreateClient(uri string, spaceId string) (*client.Client, error) {
-	url, err := url.Parse(uri)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return client.NewClient(nil, url, ApiKey, spaceId)
 }
 
 // Act initialises Octopus and MSSQL
