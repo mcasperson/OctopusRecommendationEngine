@@ -53,7 +53,7 @@ func TestFailAndPassWithOkChecks(t *testing.T) {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "OctoRecAlwaysFail: This check always fails\nOctopusRecommendationAlwaysPass: This check always passes" {
+	if results != "OctoRecAlwaysFail: This check always fails\nOctoRecAlwaysPass: This check always passes" {
 		t.Fatal("Should have returned 1 results")
 	}
 }
