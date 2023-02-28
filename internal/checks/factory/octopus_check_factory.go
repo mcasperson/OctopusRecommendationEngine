@@ -17,5 +17,6 @@ func NewOctopusCheckFactory(client *client.Client) OctopusCheckFactory {
 func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 	return []checks.OctopusCheck{
 		organization.NewOctopusEnvironmentCountCheck(o.client),
+		organization.NewOctopusDefaultProjectGroupCountCheck(o.client),
 	}, nil
 }
