@@ -8,8 +8,15 @@ import (
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"golang.org/x/exp/slices"
 	"strings"
 )
+
+// A list of known debug or system variables that are not expected to appear in the project itself
+var knownVars = []string{
+	"OctopusPrintVariables",
+	"OctopusPrintEvaluatedVariables",
+}
 
 type OctopusUnusedVariablesCheck struct {
 	client *client.Client
@@ -53,6 +60,10 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		}
 
 		for _, v := range variableSet.Variables {
+			if slices.Index(knownVars[:], v.Name) != -1 {
+				continue
+			}
+
 			if !(o.naiveStepVariableScan(deploymentProcess, v) || o.naiveVariableSetVariableScan(variableSet, v)) {
 				if _, ok := unusedVars[p]; !ok {
 					unusedVars[p] = []*variables.Variable{}
@@ -63,7 +74,6 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 	}
 
 	if len(unusedVars) > 0 {
-
 		messages := []string{}
 		for p, variables := range unusedVars {
 			if len(variables) != 0 {
@@ -97,7 +107,7 @@ func (o OctopusUnusedVariablesCheck) naiveStepVariableScan(deploymentProcess *de
 		for _, s := range deploymentProcess.Steps {
 			for _, a := range s.Actions {
 				for _, p := range a.Properties {
-					if strings.IndexAny(p.Value, variable.Name) != -1 {
+					if strings.Index(p.Value, variable.Name) != -1 {
 						return true
 					}
 				}
@@ -111,7 +121,7 @@ func (o OctopusUnusedVariablesCheck) naiveStepVariableScan(deploymentProcess *de
 // naiveVariableSetVariableScan does a simple text search for the variable in the value of other variables
 func (o OctopusUnusedVariablesCheck) naiveVariableSetVariableScan(variables variables.VariableSet, variable *variables.Variable) bool {
 	for _, v := range variables.Variables {
-		if strings.IndexAny(v.Value, variable.Name) != -1 {
+		if strings.Index(v.Value, variable.Name) != -1 {
 			return true
 		}
 	}
