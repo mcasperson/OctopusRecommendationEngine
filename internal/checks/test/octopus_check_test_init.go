@@ -7,6 +7,7 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/avast/retry-go/v4"
 	"github.com/google/uuid"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"net/http"
@@ -245,7 +246,7 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 				t.Fatalf("Failed to access the Octopus API")
 			}
 
-			client, err := CreateClient(octopusContainer.URI, "")
+			client, err := octoclient.CreateClient(octopusContainer.URI, "", ApiKey)
 			if err != nil {
 				return err
 			}
