@@ -58,7 +58,55 @@ jobs:
           path: results.xml
           reporter: java-junit
           fail-on-error: 'false'
-      - run: go build cmd/octorec.go
+      - run: go build -o octorec_linux_amd64 cmd/octorec.go
+        env:
+          GOOS: linux
+          GOARCH: amd64
+      - run: go build -o octorec_windows_amd64.exe cmd/octorec.go
+        env:
+          GOOS: windows
+          GOARCH: amd64
+      - run: go build -o octorec_macos_arm64 cmd/octorec.go
+        env:
+          GOOS: darwin
+          GOARCH: arm64
+      - id: create_release
+        name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.determine_version.outputs.semVer }}+run${{ github.run_number }}-attempt${{ github.run_attempt }}
+          release_name: Release ${{ steps.determine_version.outputs.semVer }} Run ${{ github.run_number }} Attempt ${{ github.run_attempt }}
+          draft: 'false'
+          prerelease: 'false'
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: octorec_linux_amd64
+          asset_name: octorec_linux_amd64
+          asset_content_type: application/octet-stream
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: octorec_windows_amd64.exe
+          asset_name: octorec_windows_amd64.exe
+          asset_content_type: application/octet-stream
+      - name: Upload macOS Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: octorec_macos_arm64
+          asset_name: octorec_macos_arm64
+          asset_content_type: application/octet-stream
 permissions:
   id-token: write
   checks: write
