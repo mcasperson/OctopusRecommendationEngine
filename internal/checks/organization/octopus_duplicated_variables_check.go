@@ -84,7 +84,7 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following variables are duplicated between projects. Consider moving these into library variable sets: "+strings.Join(messages, "; "),
+			"The following variables are duplicated between projects. Consider moving these into library variable sets: "+strings.Join(messages, ", "),
 			o.Id(),
 			"",
 			checks.Warning,
