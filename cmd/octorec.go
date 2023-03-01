@@ -16,7 +16,6 @@ import (
 func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
-	defer s.Stop()
 
 	url, space, apiKey := parseUrl()
 	client, err := octoclient.CreateClient(url, space, apiKey)
@@ -49,6 +48,7 @@ func main() {
 		errorExit("Failed to generate the report")
 	}
 
+	s.Stop()
 	fmt.Println(report)
 }
 
