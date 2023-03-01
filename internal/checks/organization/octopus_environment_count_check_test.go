@@ -24,7 +24,7 @@ func TestNormalEnvironmentCount(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusEnvironmentCountCheck(newSpaceClient)
+		check := NewOctopusEnvironmentCountCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestExcessiveEnvironmentCount(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusEnvironmentCountCheck(newSpaceClient)
+		check := NewOctopusEnvironmentCountCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 

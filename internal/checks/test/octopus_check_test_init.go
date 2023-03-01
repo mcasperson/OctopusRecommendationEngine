@@ -20,6 +20,7 @@ import (
 )
 
 const ApiKey = "API-ABCDEFGHIJKLMNOPQURTUVWXYZ12345"
+const BadApiKey = "API-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 type OctopusContainer struct {
 	testcontainers.Container

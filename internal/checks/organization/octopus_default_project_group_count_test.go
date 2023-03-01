@@ -24,7 +24,7 @@ func TestNormalProjectCount(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusDefaultProjectGroupCountCheck(newSpaceClient)
+		check := NewOctopusDefaultProjectGroupCountCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestExcessiveProjectCount(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusDefaultProjectGroupCountCheck(newSpaceClient)
+		check := NewOctopusDefaultProjectGroupCountCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -67,6 +67,38 @@ func TestExcessiveProjectCount(t *testing.T) {
 		// Assert
 		if result.Severity() != checks.Warning {
 			t.Fatal("Check should have produced a warning")
+		}
+
+		return nil
+	})
+}
+
+func TestExcessiveProjectCountWithPermissionsError(t *testing.T) {
+	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+		// Act
+		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "5-largeprojectcount"), []string{})
+
+		if err != nil {
+			return err
+		}
+
+		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.BadApiKey)
+
+		if err != nil {
+			return err
+		}
+
+		check := NewOctopusDefaultProjectGroupCountCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
+
+		result, err := check.Execute()
+
+		if err != nil {
+			return err
+		}
+
+		// Assert
+		if result.Severity() != checks.Permission {
+			t.Fatal("Check should have produced a permission warning")
 		}
 
 		return nil

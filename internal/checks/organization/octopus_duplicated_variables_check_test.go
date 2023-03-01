@@ -24,7 +24,7 @@ func TestNoDuplicateVars(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusDuplicatedVariablesCheck(newSpaceClient)
+		check := NewOctopusDuplicatedVariablesCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestDuplicateVars(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusDuplicatedVariablesCheck(newSpaceClient)
+		check := NewOctopusDuplicatedVariablesCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 

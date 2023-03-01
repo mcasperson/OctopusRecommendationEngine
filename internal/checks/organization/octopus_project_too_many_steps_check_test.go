@@ -24,7 +24,7 @@ func TestSmallDeploymentProcess(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusProjectTooManyStepsCheck(newSpaceClient)
+		check := NewOctopusProjectTooManyStepsCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestComplexDeploymentProcess(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusProjectTooManyStepsCheck(newSpaceClient)
+		check := NewOctopusProjectTooManyStepsCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 

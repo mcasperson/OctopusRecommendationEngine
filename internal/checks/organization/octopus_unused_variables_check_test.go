@@ -24,7 +24,7 @@ func TestNoUnusedVars(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusUnusedVariablesCheck(newSpaceClient)
+		check := NewOctopusUnusedVariablesCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestUnusedVars(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusUnusedVariablesCheck(newSpaceClient)
+		check := NewOctopusUnusedVariablesCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 

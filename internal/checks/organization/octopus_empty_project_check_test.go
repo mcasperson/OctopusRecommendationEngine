@@ -24,7 +24,7 @@ func TestPopulatedDeploymentProcess(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusEmptyProjectCheck(newSpaceClient)
+		check := NewOctopusEmptyProjectCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
@@ -56,7 +56,7 @@ func TestEmptyDeploymentProcess(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusEmptyProjectCheck(newSpaceClient)
+		check := NewOctopusEmptyProjectCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
 
