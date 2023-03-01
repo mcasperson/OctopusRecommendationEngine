@@ -101,7 +101,8 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		checks.Organization), nil
 }
 
-// naiveStepVariableScan does a simple text search for the variable in a steps properties
+// naiveStepVariableScan does a simple text search for the variable in a steps properties. This does lead to false positives as simple variables names, like "a",
+// will almost certainly appear in a step property text without necessarily being referenced as a variable.
 func (o OctopusUnusedVariablesCheck) naiveStepVariableScan(deploymentProcess *deployments.DeploymentProcess, variable *variables.Variable) bool {
 	if deploymentProcess != nil {
 		for _, s := range deploymentProcess.Steps {

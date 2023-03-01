@@ -19,7 +19,7 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
  | OctoRecDefaultProjectGroupChildCount            | Counts the number of projects in the default project group.                             |
  | OctoRecEmptyProject                             | Finds projects with no deployment process and no runbooks.                              |
  | OctoRecProjectSpecificEnvs *                    | Finds environments that are specific to a single project.                               |
-| OctoRecUnusedVariables *                        | Finds unused variables in a project.                                                    |
+| OctoRecUnusedVariables                          | Finds unused variables in a project.                                                    |
  | OctoRecDuplicatedVariables *                    | Finds variables with duplicated values.                                                 |
  | OctoRecAdminDeployments *                       | Finds deployments initiated by someone with admin credentials.                          |
  | OctoRecPerpetualApiKeys *                       | Finds API keys that do not expire.                                                      |
