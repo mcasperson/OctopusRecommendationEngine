@@ -21,5 +21,6 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusDefaultProjectGroupCountCheck(o.client),
 		organization.NewOctopusEmptyProjectCheck(o.client),
 		organization.NewOctopusUnusedVariablesCheck(o.client),
+		organization.NewOctopusDuplicatedVariablesCheck(o.client),
 	}, nil
 }

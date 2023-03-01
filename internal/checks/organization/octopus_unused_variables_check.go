@@ -12,12 +12,6 @@ import (
 	"strings"
 )
 
-// A list of known debug or system variables that are not expected to appear in the project itself
-var knownVars = []string{
-	"OctopusPrintVariables",
-	"OctopusPrintEvaluatedVariables",
-}
-
 type OctopusUnusedVariablesCheck struct {
 	client *client.Client
 }
@@ -60,7 +54,7 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		}
 
 		for _, v := range variableSet.Variables {
-			if slices.Index(knownVars[:], v.Name) != -1 {
+			if slices.Index(checks.SpecialVars[:], v.Name) != -1 {
 				continue
 			}
 
