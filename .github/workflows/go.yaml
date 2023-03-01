@@ -58,15 +58,15 @@ jobs:
           path: results.xml
           reporter: java-junit
           fail-on-error: 'false'
-      - run: go build -o octorec_linux_amd64 cmd/octorec.go
+      - run: go build -o octolint_linux_amd64 cmd/octolint.go
         env:
           GOOS: linux
           GOARCH: amd64
-      - run: go build -o octorec_windows_amd64.exe cmd/octorec.go
+      - run: go build -o octolint_windows_amd64.exe cmd/octolint.go
         env:
           GOOS: windows
           GOARCH: amd64
-      - run: go build -o octorec_macos_arm64 cmd/octorec.go
+      - run: go build -o octolint_macos_arm64 cmd/octolint.go
         env:
           GOOS: darwin
           GOARCH: arm64
