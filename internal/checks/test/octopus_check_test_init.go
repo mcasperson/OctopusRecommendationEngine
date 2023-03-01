@@ -20,7 +20,6 @@ import (
 )
 
 const ApiKey = "API-ABCDEFGHIJKLMNOPQURTUVWXYZ12345"
-const BadApiKey = "API-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 type OctopusContainer struct {
 	testcontainers.Container
@@ -335,7 +334,7 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		t.Log(string(out))
 
 		// get the ID of any new space created, which will be used in the subsequent Terraform executions
-		spaceId, err = getOutputVariable(t, terraformProjectDir, "octopus_space_id")
+		spaceId, err = GetOutputVariable(t, terraformProjectDir, "octopus_space_id")
 
 		if err != nil {
 			exitError, ok := err.(*exec.ExitError)
@@ -352,7 +351,7 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 }
 
 // getOutputVariable reads a Terraform output variable
-func getOutputVariable(t *testing.T, terraformDir string, outputVar string) (string, error) {
+func GetOutputVariable(t *testing.T, terraformDir string, outputVar string) (string, error) {
 	cmnd := exec.Command(
 		"terraform",
 		"output",
@@ -385,5 +384,5 @@ func Act(t *testing.T, container *OctopusContainer, terraformDir string, populat
 		return "", err
 	}
 
-	return getOutputVariable(t, filepath.Join("..", "..", "..", "test", "terraform", "1-singlespace"), "octopus_space_id")
+	return GetOutputVariable(t, filepath.Join("..", "..", "..", "test", "terraform", "1-singlespace"), "octopus_space_id")
 }
