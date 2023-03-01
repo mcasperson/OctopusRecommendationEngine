@@ -6,7 +6,6 @@ import (
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"golang.org/x/exp/slices"
 	"strconv"
 	"strings"
@@ -20,11 +19,12 @@ type projectVar struct {
 }
 
 type OctopusDuplicatedVariablesCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusDuplicatedVariablesCheck(client *client.Client) OctopusDuplicatedVariablesCheck {
-	return OctopusDuplicatedVariablesCheck{client: client}
+func NewOctopusDuplicatedVariablesCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusDuplicatedVariablesCheck {
+	return OctopusDuplicatedVariablesCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusDuplicatedVariablesCheck) Id() string {
@@ -39,15 +39,7 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		if octoclient.ErrorIsPermissionError(err) {
-			return checks.NewOctopusCheckResultImpl(
-				"You do not have permission to run the check",
-				o.Id(),
-				"",
-				checks.Permission,
-				checks.Organization), nil
-		}
-		return nil, err
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	projectVars := map[*projects2.Project]variables.VariableSet{}
@@ -55,7 +47,7 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 		variableSet, err := o.client.Variables.GetAll(p.ID)
 
 		if err != nil {
-			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 		}
 
 		projectVars[p] = variableSet

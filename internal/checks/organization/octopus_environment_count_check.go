@@ -6,17 +6,17 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/environments"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 )
 
 const maxEnvironments = 20
 
 type OctopusEnvironmentCountCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusEnvironmentCountCheck(client *client.Client) OctopusEnvironmentCountCheck {
-	return OctopusEnvironmentCountCheck{client: client}
+func NewOctopusEnvironmentCountCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusEnvironmentCountCheck {
+	return OctopusEnvironmentCountCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusEnvironmentCountCheck) Id() string {
@@ -36,7 +36,7 @@ func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, erro
 	resources, err := o.client.Environments.Get(query)
 
 	if err != nil {
-		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	if len(resources.Items) > maxEnvironments {

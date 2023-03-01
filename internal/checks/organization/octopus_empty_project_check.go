@@ -3,19 +3,18 @@ package organization
 import (
 	"errors"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
-	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/runbooks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"strings"
 )
 
 type OctopusEmptyProjectCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusEmptyProjectCheck(client *client.Client) OctopusEmptyProjectCheck {
-	return OctopusEmptyProjectCheck{client: client}
+func NewOctopusEmptyProjectCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusEmptyProjectCheck {
+	return OctopusEmptyProjectCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusEmptyProjectCheck) Id() string {
@@ -30,7 +29,7 @@ func (o OctopusEmptyProjectCheck) Execute() (checks.OctopusCheckResult, error) {
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	runbooks, err := o.client.Runbooks.GetAll()
@@ -40,7 +39,7 @@ func (o OctopusEmptyProjectCheck) Execute() (checks.OctopusCheckResult, error) {
 		stepCount, err := o.stepsInDeploymentProcess(p.DeploymentProcessID)
 
 		if err != nil {
-			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 		}
 
 		if runbooksInProject(p.ID, runbooks) == 0 && stepCount == 0 {
@@ -83,11 +82,6 @@ func (o OctopusEmptyProjectCheck) stepsInDeploymentProcess(deploymentProcessID s
 	resource, err := o.client.DeploymentProcesses.GetByID(deploymentProcessID)
 
 	if err != nil {
-		// If we can't find the deployment process, assume zero steps
-		apiError, ok := err.(*core.APIError)
-		if ok && apiError.StatusCode == 404 {
-			return 0, nil
-		}
 		return 0, err
 	}
 

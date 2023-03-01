@@ -5,18 +5,18 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"strings"
 )
 
 const maxStepCount = 20
 
 type OctopusProjectTooManyStepsCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusProjectTooManyStepsCheck(client *client.Client) OctopusProjectTooManyStepsCheck {
-	return OctopusProjectTooManyStepsCheck{client: client}
+func NewOctopusProjectTooManyStepsCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusProjectTooManyStepsCheck {
+	return OctopusProjectTooManyStepsCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusProjectTooManyStepsCheck) Id() string {
@@ -31,7 +31,7 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	complexProjects := []string{}
@@ -39,7 +39,7 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 		stepCount, err := o.stepsInDeploymentProcess(p.DeploymentProcessID)
 
 		if err != nil {
-			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 		}
 
 		if stepCount >= maxStepCount {

@@ -6,17 +6,17 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 )
 
 const maxProjectsInDefaultGroup = 10
 
 type OctopusDefaultProjectGroupCountCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusDefaultProjectGroupCountCheck(client *client.Client) OctopusDefaultProjectGroupCountCheck {
-	return OctopusDefaultProjectGroupCountCheck{client: client}
+func NewOctopusDefaultProjectGroupCountCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusDefaultProjectGroupCountCheck {
+	return OctopusDefaultProjectGroupCountCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusDefaultProjectGroupCountCheck) Id() string {
@@ -40,7 +40,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 				checks.Ok,
 				checks.Organization), nil
 		}
-		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	if resource != nil {
@@ -48,7 +48,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 		projects, err := o.client.ProjectGroups.GetProjects(resource)
 
 		if err != nil {
-			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 		}
 
 		if len(projects) > maxProjectsInDefaultGroup {

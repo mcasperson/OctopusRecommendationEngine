@@ -8,17 +8,17 @@ import (
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"golang.org/x/exp/slices"
 	"strings"
 )
 
 type OctopusUnusedVariablesCheck struct {
-	client *client.Client
+	client       *client.Client
+	errorHandler checks.OctopusClientErrorHandler
 }
 
-func NewOctopusUnusedVariablesCheck(client *client.Client) OctopusUnusedVariablesCheck {
-	return OctopusUnusedVariablesCheck{client: client}
+func NewOctopusUnusedVariablesCheck(client *client.Client, errorHandler checks.OctopusClientErrorHandler) OctopusUnusedVariablesCheck {
+	return OctopusUnusedVariablesCheck{client: client, errorHandler: errorHandler}
 }
 
 func (o OctopusUnusedVariablesCheck) Id() string {
@@ -33,7 +33,7 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
 	unusedVars := map[*projects2.Project][]*variables.Variable{}
@@ -45,22 +45,14 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 			if ok && apiError.StatusCode == 404 {
 				deploymentProcess = nil
 			} else {
-				return octoclient.ReturnPermissionResultOrError(o.Id(), err)
+				return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 			}
 		}
 
 		variableSet, err := o.client.Variables.GetAll(p.ID)
 
 		if err != nil {
-			if octoclient.ErrorIsPermissionError(err) {
-				return checks.NewOctopusCheckResultImpl(
-					"You do not have permission to run the check",
-					o.Id(),
-					"",
-					checks.Permission,
-					checks.Organization), nil
-			}
-			return nil, err
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 		}
 
 		for _, v := range variableSet.Variables {
