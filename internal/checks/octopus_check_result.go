@@ -1,10 +1,11 @@
 package checks
 
 const (
-	Error   int = 15
-	Warning     = 10
-	Info        = 5
-	Ok          = 0
+	Error      int = 20
+	Warning        = 15
+	Info           = 10
+	Permission     = 5
+	Ok             = 0
 )
 
 const (

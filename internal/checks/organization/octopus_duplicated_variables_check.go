@@ -6,6 +6,7 @@ import (
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"golang.org/x/exp/slices"
 	"strconv"
 	"strings"
@@ -38,6 +39,14 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
+		if octoclient.ErrorIsPermissionError(err) {
+			return checks.NewOctopusCheckResultImpl(
+				"You do not have permission to run the check",
+				o.Id(),
+				"",
+				checks.Permission,
+				checks.Organization), nil
+		}
 		return nil, err
 	}
 
@@ -46,7 +55,7 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 		variableSet, err := o.client.Variables.GetAll(p.ID)
 
 		if err != nil {
-			return nil, err
+			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 		}
 
 		projectVars[p] = variableSet

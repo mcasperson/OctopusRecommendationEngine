@@ -5,6 +5,7 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"strings"
 )
 
@@ -30,7 +31,7 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		return nil, err
+		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 	}
 
 	complexProjects := []string{}
@@ -38,7 +39,7 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 		stepCount, err := o.stepsInDeploymentProcess(p.DeploymentProcessID)
 
 		if err != nil {
-			return nil, err
+			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 		}
 
 		if stepCount >= maxStepCount {

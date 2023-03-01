@@ -8,6 +8,7 @@ import (
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"golang.org/x/exp/slices"
 	"strings"
 )
@@ -32,7 +33,7 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
-		return nil, err
+		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 	}
 
 	unusedVars := map[*projects2.Project][]*variables.Variable{}
@@ -40,16 +41,25 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		deploymentProcess, err := o.client.DeploymentProcesses.GetByID(p.DeploymentProcessID)
 
 		if err != nil {
-			if err.(*core.APIError).StatusCode == 404 {
+			apiError, ok := err.(*core.APIError)
+			if ok && apiError.StatusCode == 404 {
 				deploymentProcess = nil
 			} else {
-				return nil, err
+				return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 			}
 		}
 
 		variableSet, err := o.client.Variables.GetAll(p.ID)
 
 		if err != nil {
+			if octoclient.ErrorIsPermissionError(err) {
+				return checks.NewOctopusCheckResultImpl(
+					"You do not have permission to run the check",
+					o.Id(),
+					"",
+					checks.Permission,
+					checks.Organization), nil
+			}
 			return nil, err
 		}
 

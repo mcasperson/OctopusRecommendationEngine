@@ -6,6 +6,7 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/environments"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 )
 
 const maxEnvironments = 20
@@ -35,7 +36,7 @@ func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, erro
 	resources, err := o.client.Environments.Get(query)
 
 	if err != nil {
-		return nil, err
+		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 	}
 
 	if len(resources.Items) > maxEnvironments {

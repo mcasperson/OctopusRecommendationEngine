@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 )
 
 const maxProjectsInDefaultGroup = 10
@@ -29,7 +30,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 	resource, err := o.client.ProjectGroups.GetByName("Default Project Group")
 
 	if err != nil {
-		return nil, err
+		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 	}
 
 	if resource != nil {
@@ -37,7 +38,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 		projects, err := o.client.ProjectGroups.GetProjects(resource)
 
 		if err != nil {
-			return nil, err
+			return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 		}
 
 		if len(projects) > maxProjectsInDefaultGroup {
