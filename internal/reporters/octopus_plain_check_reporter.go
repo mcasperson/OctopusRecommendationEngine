@@ -30,5 +30,5 @@ func (o OctopusPlainCheckReporter) Generate(results []checks.OctopusCheckResult)
 		return "No issues detected", nil
 	}
 
-	return strings.Join(report[:], "\n"), nil
+	return strings.Join(report[:], "\n\n"), nil
 }
