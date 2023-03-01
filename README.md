@@ -4,6 +4,8 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 
 ## Usage
 
+Download the latest binary from the [releases](https://github.com/mcasperson/OctopusRecommendationEngine/releases/latest).
+
 ```
 ./octorec \
     -apiKey API-YOURAPIKEY \
