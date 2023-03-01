@@ -47,7 +47,10 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 		variableSet, err := o.client.Variables.GetAll(p.ID)
 
 		if err != nil {
-			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+			if !o.errorHandler.ShouldContinue(err) {
+				return nil, err
+			}
+			continue
 		}
 
 		projectVars[p] = variableSet

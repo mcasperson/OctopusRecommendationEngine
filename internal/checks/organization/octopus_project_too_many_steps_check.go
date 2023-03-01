@@ -39,7 +39,10 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 		stepCount, err := o.stepsInDeploymentProcess(p.DeploymentProcessID)
 
 		if err != nil {
-			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+			if !o.errorHandler.ShouldContinue(err) {
+				return nil, err
+			}
+			continue
 		}
 
 		if stepCount >= maxStepCount {

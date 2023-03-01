@@ -3,7 +3,6 @@ package organization
 import (
 	"errors"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
-	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/deployments"
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
@@ -41,12 +40,10 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		deploymentProcess, err := o.client.DeploymentProcesses.GetByID(p.DeploymentProcessID)
 
 		if err != nil {
-			apiError, ok := err.(*core.APIError)
-			if ok && apiError.StatusCode == 404 {
-				deploymentProcess = nil
-			} else {
-				return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+			if !o.errorHandler.ShouldContinue(err) {
+				return nil, err
 			}
+			continue
 		}
 
 		variableSet, err := o.client.Variables.GetAll(p.ID)

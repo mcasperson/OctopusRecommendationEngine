@@ -12,7 +12,7 @@ type OctopusClientPermissiveErrorHandler struct {
 }
 
 func (o OctopusClientPermissiveErrorHandler) HandleError(id string, group string, err error) (OctopusCheckResult, error) {
-	if o.ErrorIsPermissionError(err) {
+	if o.ShouldContinue(err) {
 		return NewOctopusCheckResultImpl(
 			"You do not have permission to run the check: "+err.Error(),
 			id,
@@ -23,10 +23,10 @@ func (o OctopusClientPermissiveErrorHandler) HandleError(id string, group string
 	return nil, err
 }
 
-// ErrorIsPermissionError is used to determine if an error was a permissions error. Things like 404s are also treated
+// ShouldContinue is used to determine if an error was a permissions error. Things like 404s are also treated
 // as permission errors (we saw this a lot trying to get deployment processes). Interestingly we also saw a lot of
 // StatusCode's with 0, so this function also reads the error to work out what is going on.
-func (o OctopusClientPermissiveErrorHandler) ErrorIsPermissionError(err error) bool {
+func (o OctopusClientPermissiveErrorHandler) ShouldContinue(err error) bool {
 	apiError, ok := err.(*core.APIError)
 	if ok {
 		return apiError.StatusCode == http.StatusUnauthorized ||
