@@ -22,7 +22,7 @@ func (o OctopusPlainCheckReporter) Generate(results []checks.OctopusCheckResult)
 
 	for _, r := range results {
 		if r.Severity() >= o.minSeverity {
-			report = append(report, r.Code()+": "+r.Description())
+			report = append(report, "["+r.Code()+"] "+r.Description())
 		}
 	}
 
