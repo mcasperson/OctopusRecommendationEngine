@@ -3,15 +3,20 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/briandowns/spinner"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/factory"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/executor"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/reporters"
 	"os"
+	"time"
 )
 
 func main() {
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	s.Start()
+
 	url, space, apiKey := parseUrl()
 	client, err := octoclient.CreateClient(url, space, apiKey)
 
@@ -35,6 +40,8 @@ func main() {
 	if err != nil {
 		errorExit("Failed to run the checks")
 	}
+
+	s.Stop()
 
 	reporter := reporters.NewOctopusPlainCheckReporter(checks.Warning)
 	report, err := reporter.Generate(results)
