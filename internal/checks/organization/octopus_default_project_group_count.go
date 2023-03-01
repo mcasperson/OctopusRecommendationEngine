@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/core"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 )
@@ -30,6 +31,15 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 	resource, err := o.client.ProjectGroups.GetByName("Default Project Group")
 
 	if err != nil {
+		apiError, ok := err.(*core.APIError)
+		if ok && apiError.StatusCode == 404 {
+			return checks.NewOctopusCheckResultImpl(
+				"The default project group was not found",
+				o.Id(),
+				"",
+				checks.Ok,
+				checks.Organization), nil
+		}
 		return octoclient.ReturnPermissionResultOrError(o.Id(), err)
 	}
 
