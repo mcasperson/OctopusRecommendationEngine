@@ -16,6 +16,7 @@ import (
 func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
+	defer s.Stop()
 
 	url, space, apiKey := parseUrl()
 	client, err := octoclient.CreateClient(url, space, apiKey)
@@ -40,8 +41,6 @@ func main() {
 	if err != nil {
 		errorExit("Failed to run the checks")
 	}
-
-	s.Stop()
 
 	reporter := reporters.NewOctopusPlainCheckReporter(checks.Warning)
 	report, err := reporter.Generate(results)
