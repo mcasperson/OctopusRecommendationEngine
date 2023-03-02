@@ -88,8 +88,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: octorec_linux_amd64
-          asset_name: octorec_linux_amd64
+          asset_path: octolint_linux_amd64
+          asset_name: octolint_linux_amd64
           asset_content_type: application/octet-stream
       - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
@@ -97,8 +97,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: octorec_windows_amd64.exe
-          asset_name: octorec_windows_amd64.exe
+          asset_path: octolint_windows_amd64.exe
+          asset_name: octolint_windows_amd64.exe
           asset_content_type: application/octet-stream
       - name: Upload macOS Release Asset
         uses: actions/upload-release-asset@v1
@@ -106,8 +106,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: octorec_macos_arm64
-          asset_name: octorec_macos_arm64
+          asset_path: octolint_macos_arm64
+          asset_name: octolint_macos_arm64
           asset_content_type: application/octet-stream
 permissions:
   id-token: write

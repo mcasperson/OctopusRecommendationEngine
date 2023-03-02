@@ -3,6 +3,7 @@ resource "octopusdeploy_environment" "development_environment" {
   description                  = "A development environment"
   name                         = "Development"
   use_guided_failure           = false
+  sort_order                   = 0
 }
 
 resource "octopusdeploy_environment" "test_environment" {
@@ -10,6 +11,7 @@ resource "octopusdeploy_environment" "test_environment" {
   description                  = "A test environment"
   name                         = "Test"
   use_guided_failure           = false
+  sort_order                   = 1
 }
 
 resource "octopusdeploy_environment" "production_environment" {
@@ -17,4 +19,5 @@ resource "octopusdeploy_environment" "production_environment" {
   description                  = "A production environment"
   name                         = "Production"
   use_guided_failure           = false
+  sort_order                   = 2
 }
