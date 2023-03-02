@@ -41,6 +41,7 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 
 	if resource != nil {
 		projectsDeployedByAdmins := []string{}
+		projects := []string{}
 		for _, r := range resource.Items {
 			projectId := o.getProjectFromRelatedDocs(r)
 
@@ -57,6 +58,12 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 				continue
 			}
 
+			if slices.Index(projects, project.ID) != -1 {
+				continue
+			}
+
+			projects = append(projects, project.ID)
+
 			user, err := o.client.Users.Get(users.UsersQuery{
 				Filter: r.Username,
 				Skip:   0,
@@ -70,6 +77,7 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 				continue
 			}
 
+			usersWhoDeployedProject := []string{}
 			for _, u := range user.Items {
 				teams, err := o.getAdminTeams()
 
@@ -81,10 +89,15 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 				}
 
 				for _, t := range teams {
-					if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(projectsDeployedByAdmins, project.Name) == -1 {
-						projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name)
+					if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(usersWhoDeployedProject, u.Username) == -1 {
+						usersWhoDeployedProject = append(usersWhoDeployedProject, u.Username)
 					}
 				}
+			}
+
+			result := project.Name + "(" + strings.Join(usersWhoDeployedProject, ",") + ")"
+			if slices.Index(projectsDeployedByAdmins, result) == -1 {
+				projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name+"("+strings.Join(usersWhoDeployedProject, ",")+")")
 			}
 		}
 
