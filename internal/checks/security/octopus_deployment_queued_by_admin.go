@@ -31,6 +31,8 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 
 	resource, err := o.client.Events.Get(events.EventsQuery{
 		EventCategories: []string{"DeploymentQueued"},
+		Skip:            0,
+		Take:            1000,
 	})
 
 	if err != nil {
@@ -79,7 +81,7 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 				}
 
 				for _, t := range teams {
-					if slices.Index(t.MemberUserIDs, u.ID) != -1 {
+					if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(projectsDeployedByAdmins, project.Name) == -1 {
 						projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name)
 					}
 				}

@@ -35,7 +35,7 @@ This is an example of the tool output:
  | OctoRecProjectSpecificEnvs *                    | Finds environments that are specific to a single project.                               |
 | OctoRecUnusedVariables                          | Finds unused variables in a project.                                                    |
  | OctoRecDuplicatedVariables                      | Finds variables with duplicated values.                                                 |
- | OctoRecAdminDeployments *                       | Finds deployments initiated by someone with admin credentials.                          |
+ | OctoRecDeploymentQueuedByAdmin                  | Finds deployments initiated by someone with admin credentials.                          |
  | OctoRecPerpetualApiKeys *                       | Finds API keys that do not expire.                                                      |
  | OctoRecUnusedApiKeys *                          | Finds API keys that have not been used in 30 days.                                      |
  | OctoRecSinglePhaseLifecycle *                   | Finds lifecycles with a single phase.                                                   |
