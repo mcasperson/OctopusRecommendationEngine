@@ -97,7 +97,7 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 
 			result := project.Name + "(" + strings.Join(usersWhoDeployedProject, ",") + ")"
 			if slices.Index(projectsDeployedByAdmins, result) == -1 {
-				projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name+"("+strings.Join(usersWhoDeployedProject, ",")+")")
+				projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name+" ("+strings.Join(usersWhoDeployedProject, ",")+")")
 			}
 		}
 
