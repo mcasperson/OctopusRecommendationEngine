@@ -22,6 +22,6 @@ terraform.*
 crash.log
 tflog.txt
 
-octorec
+octolint
 
 results.xml
