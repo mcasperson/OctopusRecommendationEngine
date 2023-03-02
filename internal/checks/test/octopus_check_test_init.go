@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	b64 "encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
@@ -126,6 +127,10 @@ func setupDatabase(ctx context.Context) (*mysqlContainer, error) {
 // setupOctopus creates an Octopus container
 func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, error) {
 	if os.Getenv("LICENSE") == "" {
+		return nil, errors.New("the LICENSE environment variable must be set to a base 64 encoded Octopus license key")
+	}
+
+	if _, err := b64.StdEncoding.DecodeString(os.Getenv("LICENSE")); err != nil {
 		return nil, errors.New("the LICENSE environment variable must be set to a base 64 encoded Octopus license key")
 	}
 
