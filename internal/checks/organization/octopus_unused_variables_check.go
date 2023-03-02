@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// OctopusUnusedVariablesCheck checks to see if any project variables are unused.
 type OctopusUnusedVariablesCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

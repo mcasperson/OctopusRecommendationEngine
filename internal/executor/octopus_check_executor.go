@@ -5,6 +5,8 @@ import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 )
 
+// OctopusCheckExecutor is responsible for running each lint check and returning the results. It deals with things
+// like retries and error handling.
 type OctopusCheckExecutor struct {
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/security"
 )
 
+// OctopusCheckFactory builds all the lint checks. This is where you can customize things like error handlers.
 type OctopusCheckFactory struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

@@ -20,6 +20,11 @@ import (
 	"time"
 )
 
+/*
+	This file contains a bunch of functions to support integration tests with a live Octopus instance hosted
+	in a Docker container and managed by test containers.
+*/
+
 const ApiKey = "API-ABCDEFGHIJKLMNOPQURTUVWXYZ12345"
 
 type OctopusContainer struct {

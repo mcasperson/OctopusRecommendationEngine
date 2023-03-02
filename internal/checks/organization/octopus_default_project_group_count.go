@@ -10,6 +10,8 @@ import (
 
 const maxProjectsInDefaultGroup = 10
 
+// OctopusDefaultProjectGroupCountCheck checks to see if the default project group contains too many projects. This is
+// usually an indication that additional projects groups should be created to organize the dashboard.
 type OctopusDefaultProjectGroupCountCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

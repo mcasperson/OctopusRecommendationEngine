@@ -18,6 +18,8 @@ type projectVar struct {
 	variable2 *variables.Variable
 }
 
+// OctopusDuplicatedVariablesCheck checks for variables with the same value across projects. This may be an indication
+// that library variable sets should be used to capture shared values.
 type OctopusDuplicatedVariablesCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

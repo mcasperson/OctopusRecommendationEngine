@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+// OctopusDeploymentQueuedByAdminCheck checks to see if any deployments were initiated by someone from the admin teams.
+// This usually means that a more specific and limited user should be created to perform deployments.
 type OctopusDeploymentQueuedByAdminCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

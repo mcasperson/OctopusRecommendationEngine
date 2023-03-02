@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// OctopusEmptyProjectCheck checks for projects with no steps and no runbooks.
 type OctopusEmptyProjectCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

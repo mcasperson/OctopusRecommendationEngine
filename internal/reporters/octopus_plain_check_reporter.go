@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// OctopusPlainCheckReporter prints the lint reports in plain text to std out.
 type OctopusPlainCheckReporter struct {
 	minSeverity int
 }

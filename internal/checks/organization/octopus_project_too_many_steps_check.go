@@ -10,6 +10,7 @@ import (
 
 const maxStepCount = 20
 
+// OctopusProjectTooManyStepsCheck checks to see if any project has too many steps.
 type OctopusProjectTooManyStepsCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

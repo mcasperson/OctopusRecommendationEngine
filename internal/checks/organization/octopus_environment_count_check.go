@@ -10,6 +10,7 @@ import (
 
 const maxEnvironments = 20
 
+// OctopusEnvironmentCountCheck checks to see if too many environments have been created in a space.
 type OctopusEnvironmentCountCheck struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler

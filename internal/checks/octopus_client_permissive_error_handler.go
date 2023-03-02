@@ -7,7 +7,7 @@ import (
 )
 
 // OctopusClientPermissiveErrorHandler treats almost every 400 HTTP error as a permissions error and returns
-// a result at the Permission level
+// a result at the Permission level.
 type OctopusClientPermissiveErrorHandler struct {
 }
 
