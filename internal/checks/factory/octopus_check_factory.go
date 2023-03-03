@@ -4,6 +4,7 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/organization"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/performance"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/security"
 )
 
@@ -27,5 +28,6 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusDuplicatedVariablesCheck(o.client, o.errorHandler),
 		organization.NewOctopusProjectTooManyStepsCheck(o.client, o.errorHandler),
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
+		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.errorHandler),
 	}, nil
 }

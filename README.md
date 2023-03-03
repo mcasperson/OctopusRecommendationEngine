@@ -45,4 +45,4 @@ This is an example of the tool output:
 | OctoRecDirectTenantReferences *                 | Finds projects that reference common groups of tenants directly rather than using tags. |
  | OctoRecUnhealthyTargets *                       | Finds targets that have not been healthy in the last 30 days.                           |
  | OctoRecSharedGitUsername *                      | Finds projects that share git credentials.                                              |
- | OctoRecHitTaskCap *                             | Counts how many times Octopus hit the task cap.                                         |
+ | OctoRecDeploymentQueuedTime                     | Counts how many times deployment tasks were queued for more than a minute.              |
