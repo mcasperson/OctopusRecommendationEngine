@@ -27,6 +27,7 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusUnusedVariablesCheck(o.client, o.errorHandler),
 		organization.NewOctopusDuplicatedVariablesCheck(o.client, o.errorHandler),
 		organization.NewOctopusProjectTooManyStepsCheck(o.client, o.errorHandler),
+		organization.NewOctopusLifecycleRetentionPolicyCheck(o.client, o.errorHandler),
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
 		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.errorHandler),
 	}, nil
