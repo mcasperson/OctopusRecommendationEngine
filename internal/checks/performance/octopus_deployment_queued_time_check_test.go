@@ -10,6 +10,7 @@ import (
 )
 
 func TestLongTaskQueue(t *testing.T) {
+	// Arrange
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api" || r.URL.Path == "/api/Spaces-1" {
 			w.WriteHeader(http.StatusOK)
@@ -1744,8 +1745,8 @@ func TestLongTaskQueue(t *testing.T) {
 	}))
 	defer server.Close()
 
+	// Act
 	newSpaceClient, err := octoclient.CreateClient(server.URL, "Spaces-1", test.ApiKey)
-
 	check := NewOctopusDeploymentQueuedTimeCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 	result, err := check.Execute()
