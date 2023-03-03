@@ -38,7 +38,7 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 	})
 
 	if err != nil {
-		return o.errorHandler.HandleError(o.Id(), checks.Security, err)
+		return o.errorHandler.HandleError(o.Id(), checks.Performance, err)
 	}
 
 	deployments := []string{}
