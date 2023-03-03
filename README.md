@@ -1,5 +1,7 @@
 # Octopus Linter
 
+![image](https://user-images.githubusercontent.com/160104/222631936-e1ec480e-abd5-4622-978d-08259844aa14.png)
+
 This CLI tool scans an Octopus instance to find potential issues in the configuration and suggests solutions.
 
 ## Usage
