@@ -9,6 +9,21 @@ import (
 	"testing"
 )
 
+func deleteDefaultLifecycle(newSpaceClient *client.Client) error {
+	// Delete the default lifecycle, which keeps things forever, and messes with these tests
+	defaultLifecycle, err := newSpaceClient.Lifecycles.GetByName("Default Lifecycle")
+	if err != nil {
+		return err
+	}
+
+	err = newSpaceClient.Lifecycles.DeleteByID(defaultLifecycle.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func TestLifecyclesMeetRecommendations(t *testing.T) {
 	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
@@ -24,13 +39,14 @@ func TestLifecyclesMeetRecommendations(t *testing.T) {
 			return err
 		}
 
-		check := NewOctopusLifecycleRetentionPolicyCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
-
-		result, err := check.Execute()
-
+		err = deleteDefaultLifecycle(newSpaceClient)
 		if err != nil {
 			return err
 		}
+
+		check := NewOctopusLifecycleRetentionPolicyCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
+
+		result, err := check.Execute()
 
 		// Assert
 		if result.Severity() != checks.Ok {
@@ -52,6 +68,11 @@ func TestLifecycleKeepsReleasesForever(t *testing.T) {
 
 		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.ApiKey)
 
+		if err != nil {
+			return err
+		}
+
+		err = deleteDefaultLifecycle(newSpaceClient)
 		if err != nil {
 			return err
 		}
@@ -88,6 +109,11 @@ func TestLifecycleKeepsFilesForever(t *testing.T) {
 			return err
 		}
 
+		err = deleteDefaultLifecycle(newSpaceClient)
+		if err != nil {
+			return err
+		}
+
 		check := NewOctopusLifecycleRetentionPolicyCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
@@ -120,6 +146,11 @@ func TestLifecyclePhaseKeepsReleasesForever(t *testing.T) {
 			return err
 		}
 
+		err = deleteDefaultLifecycle(newSpaceClient)
+		if err != nil {
+			return err
+		}
+
 		check := NewOctopusLifecycleRetentionPolicyCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 
 		result, err := check.Execute()
@@ -148,6 +179,11 @@ func TestLifecyclePhaseKeepsFilesForever(t *testing.T) {
 
 		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.ApiKey)
 
+		if err != nil {
+			return err
+		}
+
+		err = deleteDefaultLifecycle(newSpaceClient)
 		if err != nil {
 			return err
 		}
