@@ -52,6 +52,8 @@ jobs:
           # Set this to a base64 encoded Octopus license. It is passed to the Octopus docker image, which requires an
           # encoded license.
           LICENSE: ${{ secrets.LICENSE }}
+          # Reuse any Terraform plugins between tests
+          TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}
       - if: always()
         name: Report
         uses: dorny/test-reporter@v1
