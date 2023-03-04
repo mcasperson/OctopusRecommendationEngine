@@ -59,7 +59,7 @@ resource "octopusdeploy_lifecycle" "example" {
     }
 
     tentacle_retention_policy {
-      quantity_to_keep    = 30
+      quantity_to_keep    = 0
       should_keep_forever = true
       unit                = "Days"
     }
