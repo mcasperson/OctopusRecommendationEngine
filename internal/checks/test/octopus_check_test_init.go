@@ -335,6 +335,16 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			vars = populateVars
 		}
 
+		// Error like:
+		// Error: Octopus API error: Resource is not found or it doesn't exist in the current space context. Please contact your administrator for more information. []
+		// are sometimes proceeded with:
+		// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
+		// So wait until we get a valid response from the API endpoint before applying terraform
+		WaitForResource(func() error {
+			_, err := http.Get(container.URI + "/api")
+			return err
+		}, time.Minute)
+
 		newArgs := append([]string{
 			"apply",
 			"-auto-approve",
@@ -372,11 +382,6 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			}
 			return err
 		}
-
-		WaitForResource(func() error {
-			_, err := http.Get(container.URI + "/api/" + spaceId)
-			return err
-		}, time.Minute)
 	}
 
 	return nil
