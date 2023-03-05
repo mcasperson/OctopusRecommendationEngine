@@ -351,6 +351,18 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			return nil
 		}, time.Minute)
 
+		// Also wait for the space to be available
+		WaitForResource(func() error {
+			response, err := http.Get(container.URI + "/api/" + spaceId)
+			if err != nil {
+				return err
+			}
+			if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
+				return errors.New("non 2xx status code returned")
+			}
+			return nil
+		}, time.Minute)
+
 		newArgs := append([]string{
 			"apply",
 			"-auto-approve",
