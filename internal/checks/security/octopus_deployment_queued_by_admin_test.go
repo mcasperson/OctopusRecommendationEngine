@@ -77,7 +77,7 @@ func TestDeployedByAdmin(t *testing.T) {
 			return err
 		}
 
-		_, err = newSpaceClient.Deployments.Add(&deployments.Deployment{
+		deployment, err := newSpaceClient.Deployments.Add(&deployments.Deployment{
 			Changes:                  nil,
 			ChangesMarkdown:          "",
 			ChannelID:                "",
@@ -112,7 +112,14 @@ func TestDeployedByAdmin(t *testing.T) {
 			return err
 		}
 
-		time.Sleep(time.Second * 10)
+		err = test.WaitForResource(func() error {
+			_, err := newSpaceClient.Deployments.GetByID(deployment.ID)
+			return err
+		}, time.Minute)
+
+		if err != nil {
+			return err
+		}
 
 		check := NewOctopusDeploymentQueuedByAdminCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
 

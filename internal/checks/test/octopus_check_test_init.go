@@ -45,11 +45,11 @@ func (g *TestLogConsumer) Accept(l testcontainers.Log) {
 	fmt.Println(string(l.Content))
 }
 
-func waitForServer(URL string, timeout time.Duration) error {
+func WaitForResource(callback func() error, timeout time.Duration) error {
 	ch := make(chan bool)
 	go func() {
 		for {
-			_, err := http.Get(URL)
+			err := callback()
 			if err == nil {
 				ch <- true
 				return
@@ -377,7 +377,10 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			return err
 		}
 
-		waitForServer(container.URI+"/api/"+spaceId, time.Minute)
+		WaitForResource(func() error {
+			_, err := http.Get(container.URI + "/api/" + spaceId)
+			return err
+		}, time.Minute)
 	}
 
 	return nil
