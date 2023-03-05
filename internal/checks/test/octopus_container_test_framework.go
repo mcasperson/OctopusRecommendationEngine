@@ -135,7 +135,7 @@ func (o *OctopusContainerTest) setupDatabase(ctx context.Context) (*mysqlContain
 }
 
 func (o *OctopusContainerTest) getOctopusVersion() string {
-	overrideOctoTag := os.Getenv("OCTOVERSION")
+	overrideOctoTag := os.Getenv("OCTOTESTVERSION")
 	if overrideOctoTag != "" {
 		return overrideOctoTag
 	}
@@ -144,7 +144,7 @@ func (o *OctopusContainerTest) getOctopusVersion() string {
 }
 
 func (o *OctopusContainerTest) getRetryCount() uint {
-	count, err := strconv.Atoi(os.Getenv("RETRYCOUNT"))
+	count, err := strconv.Atoi(os.Getenv("OCTOTESTRETRYCOUNT"))
 	if err == nil && count > 0 {
 		return uint(count)
 	}
