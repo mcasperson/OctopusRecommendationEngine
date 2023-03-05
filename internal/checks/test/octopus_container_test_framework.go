@@ -347,6 +347,10 @@ func (o *OctopusContainerTest) terraformApply(t *testing.T, terraformProjectDir 
 
 // waitForSpace attempts to ensure the API and space is available before continuing
 func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
+	if os.Getenv("OCTOTESTWAITFORAPI") == "false" {
+		return
+	}
+
 	// Error like:
 	// Error: Octopus API error: Resource is not found or it doesn't exist in the current space context. Please contact your administrator for more information. []
 	// are sometimes proceeded with:
