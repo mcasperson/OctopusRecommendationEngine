@@ -326,6 +326,37 @@ func (o *OctopusContainerTest) terraformApply(t *testing.T, terraformProjectDir 
 	return nil
 }
 
+// waitForSpace attempts to ensure the API and space is available before continuing
+func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
+	// Error like:
+	// Error: Octopus API error: Resource is not found or it doesn't exist in the current space context. Please contact your administrator for more information. []
+	// are sometimes proceeded with:
+	// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
+	// So wait until we get a valid response from the API endpoint before applying terraform
+	lintwait.WaitForResource(func() error {
+		response, err := http.Get(server + "/api")
+		if err != nil {
+			return err
+		}
+		if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
+			return errors.New("non 2xx status code returned")
+		}
+		return nil
+	}, time.Minute)
+
+	// Also wait for the space to be available
+	lintwait.WaitForResource(func() error {
+		response, err := http.Get(server + "/api/" + spaceId)
+		if err != nil {
+			return err
+		}
+		if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
+			return errors.New("non 2xx status code returned")
+		}
+		return nil
+	}, time.Minute)
+}
+
 // initialiseOctopus uses Terraform to populate the test Octopus instance, making sure to clean up
 // any files generated during previous Terraform executions to avoid conflicts and locking issues.
 func (o *OctopusContainerTest) initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir string, spaceName string, initialiseVars []string, populateVars []string) error {
@@ -360,33 +391,7 @@ func (o *OctopusContainerTest) initialiseOctopus(t *testing.T, container *Octopu
 			vars = populateVars
 		}
 
-		// Error like:
-		// Error: Octopus API error: Resource is not found or it doesn't exist in the current space context. Please contact your administrator for more information. []
-		// are sometimes proceeded with:
-		// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
-		// So wait until we get a valid response from the API endpoint before applying terraform
-		lintwait.WaitForResource(func() error {
-			response, err := http.Get(container.URI + "/api")
-			if err != nil {
-				return err
-			}
-			if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
-				return errors.New("non 2xx status code returned")
-			}
-			return nil
-		}, time.Minute)
-
-		// Also wait for the space to be available
-		lintwait.WaitForResource(func() error {
-			response, err := http.Get(container.URI + "/api/" + spaceId)
-			if err != nil {
-				return err
-			}
-			if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
-				return errors.New("non 2xx status code returned")
-			}
-			return nil
-		}, time.Minute)
+		o.waitForSpace(container.URI, spaceId)
 
 		err = o.terraformApply(t, terraformProjectDir, container.URI, spaceId, vars)
 
