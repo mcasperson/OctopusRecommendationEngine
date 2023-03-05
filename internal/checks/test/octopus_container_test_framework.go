@@ -133,6 +133,15 @@ func (o *OctopusContainerTest) setupDatabase(ctx context.Context) (*mysqlContain
 	}, nil
 }
 
+func (o *OctopusContainerTest) getOctopusVersion() string {
+	overrideOctoTag := os.Getenv("OCTOVERSION")
+	if overrideOctoTag != "" {
+		return overrideOctoTag
+	}
+
+	return "latest"
+}
+
 // setupOctopus creates an Octopus container
 func (o *OctopusContainerTest) setupOctopus(ctx context.Context, connString string) (*OctopusContainer, error) {
 	if os.Getenv("LICENSE") == "" {
@@ -144,7 +153,7 @@ func (o *OctopusContainerTest) setupOctopus(ctx context.Context, connString stri
 	}
 
 	req := testcontainers.ContainerRequest{
-		Image:        "octopusdeploy/octopusdeploy:latest",
+		Image:        "octopusdeploy/octopusdeploy:" + o.getOctopusVersion(),
 		ExposedPorts: []string{"8080/tcp"},
 		Env: map[string]string{
 			"ACCEPT_EULA":                   "Y",
