@@ -341,8 +341,14 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
 		// So wait until we get a valid response from the API endpoint before applying terraform
 		WaitForResource(func() error {
-			_, err := http.Get(container.URI + "/api")
-			return err
+			response, err := http.Get(container.URI + "/api")
+			if err != nil {
+				return err
+			}
+			if !(response.StatusCode >= 200 && response.StatusCode <= 299) {
+				return errors.New("non 2xx status code returned")
+			}
+			return nil
 		}, time.Minute)
 
 		newArgs := append([]string{
