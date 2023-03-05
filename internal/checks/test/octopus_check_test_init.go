@@ -270,7 +270,7 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 			}
 
 			if !success {
-				t.Fatalf("Failed to access the Octopus API")
+				return errors.New("failed to access the Octopus API")
 			}
 
 			client, err := octoclient.CreateClient(octopusContainer.URI, "", ApiKey)
