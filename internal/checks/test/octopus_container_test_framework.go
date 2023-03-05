@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -142,6 +143,15 @@ func (o *OctopusContainerTest) getOctopusVersion() string {
 	return "latest"
 }
 
+func (o *OctopusContainerTest) getRetryCount() uint {
+	count, err := strconv.Atoi(os.Getenv("RETRYCOUNT"))
+	if err == nil && count > 0 {
+		return uint(count)
+	}
+
+	return 3
+}
+
 // setupOctopus creates an Octopus container
 func (o *OctopusContainerTest) setupOctopus(ctx context.Context, connString string) (*OctopusContainer, error) {
 	if os.Getenv("LICENSE") == "" {
@@ -266,7 +276,7 @@ func (o *OctopusContainerTest) ArrangeTest(t *testing.T, testFunc func(t *testin
 
 			return testFunc(t, octopusContainer, client)
 		},
-		retry.Attempts(3),
+		retry.Attempts(o.getRetryCount()),
 	)
 
 	if err != nil {
