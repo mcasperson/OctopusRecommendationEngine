@@ -50,6 +50,10 @@ func (g *TestLogConsumer) Accept(l testcontainers.Log) {
 type OctopusContainerTest struct {
 }
 
+func (o *OctopusContainerTest) getTerraformTestDirRelativePath() string {
+	return filepath.Join("..", "..", "..")
+}
+
 func (o *OctopusContainerTest) enableContainerLogging(container testcontainers.Container, ctx context.Context) error {
 	// Display the container logs
 	err := container.StartLogProducer(ctx)
@@ -391,7 +395,7 @@ func (o *OctopusContainerTest) initialiseOctopus(t *testing.T, container *Octopu
 
 	// This test creates a new space and then populates the space.
 	terraformProjectDirs := []string{}
-	terraformProjectDirs = append(terraformProjectDirs, filepath.Join("..", "..", "..", "test", "terraform", "1-singlespace"))
+	terraformProjectDirs = append(terraformProjectDirs, filepath.Join(o.getTerraformTestDirRelativePath(), "test", "terraform", "1-singlespace"))
 	terraformProjectDirs = append(terraformProjectDirs, terraformDir)
 
 	// First loop initialises the new space, second populates the space
@@ -467,5 +471,5 @@ func (o *OctopusContainerTest) Act(t *testing.T, container *OctopusContainer, te
 		return "", err
 	}
 
-	return GetOutputVariable(t, filepath.Join("..", "..", "..", "test", "terraform", "1-singlespace"), "octopus_space_id")
+	return GetOutputVariable(t, filepath.Join(o.getTerraformTestDirRelativePath(), "test", "terraform", "1-singlespace"), "octopus_space_id")
 }
