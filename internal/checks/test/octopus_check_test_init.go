@@ -46,24 +46,20 @@ func (g *TestLogConsumer) Accept(l testcontainers.Log) {
 }
 
 func WaitForResource(callback func() error, timeout time.Duration) error {
-	ch := make(chan bool)
-	go func() {
-		for {
-			err := callback()
-			if err == nil {
-				ch <- true
-				return
-			}
-			time.Sleep(time.Second)
+	start := time.Now()
+	for {
+		err := callback()
+		if err == nil {
+			return nil
 		}
-	}()
-
-	select {
-	case <-ch:
-		return nil
-	case <-time.After(timeout):
-		return fmt.Errorf("server did not reply after %v", timeout)
+		time.Sleep(time.Second)
+		now := time.Now()
+		if now.Sub(start) > timeout {
+			break
+		}
 	}
+
+	return fmt.Errorf("server did not reply after %v", timeout)
 }
 
 func enableContainerLogging(container testcontainers.Container, ctx context.Context) error {
