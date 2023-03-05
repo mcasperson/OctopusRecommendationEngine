@@ -9,6 +9,7 @@ import (
 	"github.com/avast/retry-go/v4"
 	"github.com/google/uuid"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
+	lintwait "github.com/mcasperson/OctopusRecommendationEngine/internal/wait"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"net/http"
@@ -45,24 +46,10 @@ func (g *TestLogConsumer) Accept(l testcontainers.Log) {
 	fmt.Println(string(l.Content))
 }
 
-func WaitForResource(callback func() error, timeout time.Duration) error {
-	start := time.Now()
-	for {
-		err := callback()
-		if err == nil {
-			return nil
-		}
-		time.Sleep(time.Second)
-		now := time.Now()
-		if now.Sub(start) > timeout {
-			break
-		}
-	}
-
-	return fmt.Errorf("server did not reply after %v", timeout)
+type OctopusContainerTest struct {
 }
 
-func enableContainerLogging(container testcontainers.Container, ctx context.Context) error {
+func (o *OctopusContainerTest) enableContainerLogging(container testcontainers.Container, ctx context.Context) error {
 	// Display the container logs
 	err := container.StartLogProducer(ctx)
 	if err != nil {
@@ -74,7 +61,7 @@ func enableContainerLogging(container testcontainers.Container, ctx context.Cont
 }
 
 // getReaperSkipped will return true if running in a podman environment
-func getReaperSkipped() bool {
+func (o *OctopusContainerTest) getReaperSkipped() bool {
 	if strings.Contains(os.Getenv("DOCKER_HOST"), "podman") {
 		return true
 	}
@@ -83,7 +70,7 @@ func getReaperSkipped() bool {
 }
 
 // getProvider returns the test containers provider
-func getProvider() testcontainers.ProviderType {
+func (o *OctopusContainerTest) getProvider() testcontainers.ProviderType {
 	if strings.Contains(os.Getenv("DOCKER_HOST"), "podman") {
 		return testcontainers.ProviderPodman
 	}
@@ -92,19 +79,19 @@ func getProvider() testcontainers.ProviderType {
 }
 
 // setupNetwork creates an internal network for Octopus and MS SQL
-func setupNetwork(ctx context.Context) (testcontainers.Network, error) {
+func (o *OctopusContainerTest) setupNetwork(ctx context.Context) (testcontainers.Network, error) {
 	return testcontainers.GenericNetwork(ctx, testcontainers.GenericNetworkRequest{
 		NetworkRequest: testcontainers.NetworkRequest{
 			Name:           "octopusterraformtests",
 			CheckDuplicate: false,
-			SkipReaper:     getReaperSkipped(),
+			SkipReaper:     o.getReaperSkipped(),
 		},
-		ProviderType: getProvider(),
+		ProviderType: o.getProvider(),
 	})
 }
 
 // setupDatabase creates a MSSQL container
-func setupDatabase(ctx context.Context) (*mysqlContainer, error) {
+func (o *OctopusContainerTest) setupDatabase(ctx context.Context) (*mysqlContainer, error) {
 	req := testcontainers.ContainerRequest{
 		Image:        "mcr.microsoft.com/mssql/server",
 		ExposedPorts: []string{"1433/tcp"},
@@ -116,7 +103,7 @@ func setupDatabase(ctx context.Context) (*mysqlContainer, error) {
 			func(exitCode int) bool {
 				return exitCode == 0
 			}),
-		SkipReaper: getReaperSkipped(),
+		SkipReaper: o.getReaperSkipped(),
 		Networks: []string{
 			"octopusterraformtests",
 		},
@@ -147,7 +134,7 @@ func setupDatabase(ctx context.Context) (*mysqlContainer, error) {
 }
 
 // setupOctopus creates an Octopus container
-func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, error) {
+func (o *OctopusContainerTest) setupOctopus(ctx context.Context, connString string) (*OctopusContainer, error) {
 	if os.Getenv("LICENSE") == "" {
 		return nil, errors.New("the LICENSE environment variable must be set to a base 64 encoded Octopus license key")
 	}
@@ -157,8 +144,6 @@ func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, er
 	}
 
 	req := testcontainers.ContainerRequest{
-		// Be aware that later versions of Octopus killed Github Actions.
-		// I think maybe they used more memory? 2022.2 works fine though.
 		Image:        "octopusdeploy/octopusdeploy:latest",
 		ExposedPorts: []string{"8080/tcp"},
 		Env: map[string]string{
@@ -172,7 +157,7 @@ func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, er
 		},
 		Privileged: false,
 		WaitingFor: wait.ForLog("Listening for HTTP requests on").WithStartupTimeout(30 * time.Minute),
-		SkipReaper: getReaperSkipped(),
+		SkipReaper: o.getReaperSkipped(),
 		Networks: []string{
 			"octopusterraformtests",
 		},
@@ -186,7 +171,7 @@ func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, er
 	}
 
 	// Display the container logs
-	enableContainerLogging(container, ctx)
+	o.enableContainerLogging(container, ctx)
 
 	ip, err := container.Host(ctx)
 	if err != nil {
@@ -204,7 +189,7 @@ func setupOctopus(ctx context.Context, connString string) (*OctopusContainer, er
 }
 
 // ArrangeTest is wrapper that initialises Octopus, runs a test, and cleans up the containers
-func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusContainer, client *client.Client) error) {
+func (o *OctopusContainerTest) ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusContainer, client *client.Client) error) {
 	err := retry.Do(
 		func() error {
 
@@ -214,12 +199,12 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 
 			ctx := context.Background()
 
-			network, err := setupNetwork(ctx)
+			network, err := o.setupNetwork(ctx)
 			if err != nil {
 				return err
 			}
 
-			sqlServer, err := setupDatabase(ctx)
+			sqlServer, err := o.setupDatabase(ctx)
 			if err != nil {
 				return err
 			}
@@ -231,7 +216,7 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 
 			t.Log("SQL Server IP: " + sqlIp)
 
-			octopusContainer, err := setupOctopus(ctx, "Server="+sqlIp+",1433;Database=OctopusDeploy;User=sa;Password=Password01!")
+			octopusContainer, err := o.setupOctopus(ctx, "Server="+sqlIp+",1433;Database=OctopusDeploy;User=sa;Password=Password01!")
 			if err != nil {
 				return err
 			}
@@ -253,24 +238,16 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 			}()
 
 			// give the server 5 minutes to start up
-			success := false
-			for start := time.Now(); ; {
-				if time.Since(start) > 5*time.Minute {
-					break
-				}
-
+			err = lintwait.WaitForResource(func() error {
 				resp, err := http.Get(octopusContainer.URI + "/api")
-				if err == nil && resp.StatusCode == http.StatusOK {
-					success = true
-					t.Log("Successfully contacted the Octopus API")
-					break
+				if err != nil || resp.StatusCode != http.StatusOK {
+					return errors.New("the api endpoint was not available")
 				}
+				return nil
+			}, 5*time.Minute)
 
-				time.Sleep(10 * time.Second)
-			}
-
-			if !success {
-				return errors.New("failed to access the Octopus API")
+			if err != nil {
+				return err
 			}
 
 			client, err := octoclient.CreateClient(octopusContainer.URI, "", ApiKey)
@@ -288,9 +265,70 @@ func ArrangeTest(t *testing.T, testFunc func(t *testing.T, container *OctopusCon
 	}
 }
 
+// cleanTerraformModule removes state and lock files to ensure we get a clean run each time
+func (o *OctopusContainerTest) cleanTerraformModule(terraformProjectDir string) error {
+	os.Remove(filepath.Join(terraformProjectDir, ".terraform.lock.hcl"))
+	os.Remove(filepath.Join(terraformProjectDir, "terraform.tfstate"))
+	os.Remove(filepath.Join(terraformProjectDir, ".terraform.tfstate.lock.info"))
+	return nil
+}
+
+// terraformInit runs "terraform init"
+func (o *OctopusContainerTest) terraformInit(t *testing.T, terraformProjectDir string) error {
+	args := []string{"init", "-no-color"}
+	cmnd := exec.Command("terraform", args...)
+	cmnd.Dir = terraformProjectDir
+	out, err := cmnd.Output()
+
+	t.Log(string(out))
+
+	if err != nil {
+		exitError, ok := err.(*exec.ExitError)
+		if ok {
+			t.Log(string(exitError.Stderr))
+		} else {
+			t.Log(err.Error())
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+// terraformApply runs "terraform apply"
+func (o *OctopusContainerTest) terraformApply(t *testing.T, terraformProjectDir string, server string, spaceId string, vars []string) error {
+	newArgs := append([]string{
+		"apply",
+		"-auto-approve",
+		"-no-color",
+		"-var=octopus_server=" + server,
+		"-var=octopus_apikey=" + ApiKey,
+		"-var=octopus_space_id=" + spaceId,
+	}, vars...)
+
+	cmnd := exec.Command("terraform", newArgs...)
+	cmnd.Dir = terraformProjectDir
+	out, err := cmnd.Output()
+
+	t.Log(string(out))
+
+	if err != nil {
+		exitError, ok := err.(*exec.ExitError)
+		if ok {
+			t.Log(string(exitError.Stderr))
+		} else {
+			t.Log(err)
+		}
+		return err
+	}
+
+	return nil
+}
+
 // initialiseOctopus uses Terraform to populate the test Octopus instance, making sure to clean up
 // any files generated during previous Terraform executions to avoid conflicts and locking issues.
-func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir string, spaceName string, initialiseVars []string, populateVars []string) error {
+func (o *OctopusContainerTest) initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir string, spaceName string, initialiseVars []string, populateVars []string) error {
 	path, err := os.Getwd()
 	if err != nil {
 		return err
@@ -300,30 +338,17 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 	// This test creates a new space and then populates the space.
 	terraformProjectDirs := []string{}
 	terraformProjectDirs = append(terraformProjectDirs, filepath.Join("..", "..", "..", "test", "terraform", "1-singlespace"))
-	terraformProjectDirs = append(terraformProjectDirs, filepath.Join(terraformDir))
+	terraformProjectDirs = append(terraformProjectDirs, terraformDir)
 
 	// First loop initialises the new space, second populates the space
 	spaceId := "Spaces-1"
 	for i, terraformProjectDir := range terraformProjectDirs {
 
-		os.Remove(filepath.Join(terraformProjectDir, ".terraform.lock.hcl"))
-		os.Remove(filepath.Join(terraformProjectDir, "terraform.tfstate"))
+		o.cleanTerraformModule(terraformProjectDir)
 
-		args := []string{"init", "-no-color"}
-		cmnd := exec.Command("terraform", args...)
-		cmnd.Dir = terraformProjectDir
-		out, err := cmnd.Output()
-
-		t.Log(string(out))
+		err := o.terraformInit(t, terraformProjectDir)
 
 		if err != nil {
-			exitError, ok := err.(*exec.ExitError)
-			if ok {
-				t.Log(string(exitError.Stderr))
-			} else {
-				t.Log(err.Error())
-			}
-
 			return err
 		}
 
@@ -340,7 +365,7 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		// are sometimes proceeded with:
 		// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
 		// So wait until we get a valid response from the API endpoint before applying terraform
-		WaitForResource(func() error {
+		lintwait.WaitForResource(func() error {
 			response, err := http.Get(container.URI + "/api")
 			if err != nil {
 				return err
@@ -352,7 +377,7 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		}, time.Minute)
 
 		// Also wait for the space to be available
-		WaitForResource(func() error {
+		lintwait.WaitForResource(func() error {
 			response, err := http.Get(container.URI + "/api/" + spaceId)
 			if err != nil {
 				return err
@@ -363,28 +388,9 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			return nil
 		}, time.Minute)
 
-		newArgs := append([]string{
-			"apply",
-			"-auto-approve",
-			"-no-color",
-			"-var=octopus_server=" + container.URI,
-			"-var=octopus_apikey=" + ApiKey,
-			"-var=octopus_space_id=" + spaceId,
-		}, vars...)
-
-		cmnd = exec.Command("terraform", newArgs...)
-		cmnd.Dir = terraformProjectDir
-		out, err = cmnd.Output()
-
-		t.Log(string(out))
+		err = o.terraformApply(t, terraformProjectDir, container.URI, spaceId, vars)
 
 		if err != nil {
-			exitError, ok := err.(*exec.ExitError)
-			if ok {
-				t.Log(string(exitError.Stderr))
-			} else {
-				t.Log(err)
-			}
 			return err
 		}
 
@@ -392,12 +398,6 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		spaceId, err = GetOutputVariable(t, terraformProjectDir, "octopus_space_id")
 
 		if err != nil {
-			exitError, ok := err.(*exec.ExitError)
-			if ok {
-				t.Log(string(exitError.Stderr))
-			} else {
-				t.Log(err)
-			}
 			return err
 		}
 	}
@@ -429,11 +429,11 @@ func GetOutputVariable(t *testing.T, terraformDir string, outputVar string) (str
 }
 
 // Act initialises Octopus and MSSQL
-func Act(t *testing.T, container *OctopusContainer, terraformDir string, populateVars []string) (string, error) {
+func (o *OctopusContainerTest) Act(t *testing.T, container *OctopusContainer, terraformDir string, populateVars []string) (string, error) {
 	t.Log("POPULATING TEST SPACE")
 
 	spaceName := strings.ReplaceAll(fmt.Sprint(uuid.New()), "-", "")[:20]
-	err := initialiseOctopus(t, container, terraformDir, spaceName, []string{}, populateVars)
+	err := o.initialiseOctopus(t, container, terraformDir, spaceName, []string{}, populateVars)
 
 	if err != nil {
 		return "", err

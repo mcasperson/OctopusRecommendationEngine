@@ -10,9 +10,10 @@ import (
 )
 
 func TestNoUnusedVars(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "8-nounusedvars"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "8-nounusedvars"), []string{})
 
 		if err != nil {
 			return err
@@ -42,9 +43,10 @@ func TestNoUnusedVars(t *testing.T) {
 }
 
 func TestUnusedVars(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "9-unusedvars"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "9-unusedvars"), []string{})
 
 		if err != nil {
 			return err

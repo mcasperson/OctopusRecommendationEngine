@@ -10,9 +10,10 @@ import (
 )
 
 func TestSmallDeploymentProcess(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "12-simpledeploymentprocess"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "12-simpledeploymentprocess"), []string{})
 
 		if err != nil {
 			return err
@@ -42,9 +43,10 @@ func TestSmallDeploymentProcess(t *testing.T) {
 }
 
 func TestComplexDeploymentProcess(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "13-complexdeploymentprocess"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "13-complexdeploymentprocess"), []string{})
 
 		if err != nil {
 			return err

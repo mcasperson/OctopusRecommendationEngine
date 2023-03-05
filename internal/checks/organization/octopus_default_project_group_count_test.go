@@ -11,9 +11,10 @@ import (
 )
 
 func TestNormalProjectCount(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "4-smallprojectcount"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "4-smallprojectcount"), []string{})
 
 		if err != nil {
 			return err
@@ -43,9 +44,10 @@ func TestNormalProjectCount(t *testing.T) {
 }
 
 func TestExcessiveProjectCount(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "5-largeprojectcount"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "5-largeprojectcount"), []string{})
 
 		if err != nil {
 			return err
@@ -75,10 +77,11 @@ func TestExcessiveProjectCount(t *testing.T) {
 }
 
 func TestExcessiveProjectCountWithPermissionsError(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
 		dir := filepath.Join("..", "..", "..", "test", "terraform", "14-limitedserviceaccount")
-		newSpaceId, err := test.Act(t, container, dir, []string{})
+		newSpaceId, err := testFramework.Act(t, container, dir, []string{})
 
 		if err != nil {
 			return err

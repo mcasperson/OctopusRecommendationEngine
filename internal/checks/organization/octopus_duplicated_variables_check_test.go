@@ -10,9 +10,10 @@ import (
 )
 
 func TestNoDuplicateVars(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "10-noduplicatevars"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "10-noduplicatevars"), []string{})
 
 		if err != nil {
 			return err
@@ -42,9 +43,10 @@ func TestNoDuplicateVars(t *testing.T) {
 }
 
 func TestDuplicateVars(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "11-duplicatevars"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "11-duplicatevars"), []string{})
 
 		if err != nil {
 			return err

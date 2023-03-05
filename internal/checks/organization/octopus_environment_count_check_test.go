@@ -10,9 +10,10 @@ import (
 )
 
 func TestNormalEnvironmentCount(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "2-fewenvironments"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "2-fewenvironments"), []string{})
 
 		if err != nil {
 			return err
@@ -42,9 +43,10 @@ func TestNormalEnvironmentCount(t *testing.T) {
 }
 
 func TestExcessiveEnvironmentCount(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "3-toomanyenvironments"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "3-toomanyenvironments"), []string{})
 
 		if err != nil {
 			return err

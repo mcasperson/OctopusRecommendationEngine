@@ -9,16 +9,18 @@ import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
+	"github.com/mcasperson/OctopusRecommendationEngine/internal/wait"
 	"path/filepath"
 	"testing"
 	"time"
 )
 
 func TestDeployedByAdmin(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
 		dir := filepath.Join("..", "..", "..", "test", "terraform", "15-deployedbyadmin")
-		newSpaceId, err := test.Act(t, container, dir, []string{})
+		newSpaceId, err := testFramework.Act(t, container, dir, []string{})
 
 		if err != nil {
 			return err
@@ -112,7 +114,7 @@ func TestDeployedByAdmin(t *testing.T) {
 			return err
 		}
 
-		err = test.WaitForResource(func() error {
+		err = wait.WaitForResource(func() error {
 			_, err := newSpaceClient.Deployments.GetByID(deployment.ID)
 			return err
 		}, time.Minute)

@@ -25,9 +25,10 @@ func deleteDefaultLifecycle(newSpaceClient *client.Client) error {
 }
 
 func TestLifecyclesMeetRecommendations(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "16-lifecyclesmeetrecommendations"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "16-lifecyclesmeetrecommendations"), []string{})
 
 		if err != nil {
 			return err
@@ -58,9 +59,10 @@ func TestLifecyclesMeetRecommendations(t *testing.T) {
 }
 
 func TestLifecycleKeepsReleasesForever(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "17-lifecyclekeepsreleasesforever"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "17-lifecyclekeepsreleasesforever"), []string{})
 
 		if err != nil {
 			return err
@@ -95,9 +97,10 @@ func TestLifecycleKeepsReleasesForever(t *testing.T) {
 }
 
 func TestLifecycleKeepsFilesForever(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "18-lifecyclekeepsfilesforever"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "18-lifecyclekeepsfilesforever"), []string{})
 
 		if err != nil {
 			return err
@@ -132,9 +135,10 @@ func TestLifecycleKeepsFilesForever(t *testing.T) {
 }
 
 func TestLifecyclePhaseKeepsReleasesForever(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "19-lifecyclephasekeepsreleasesforever"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "19-lifecyclephasekeepsreleasesforever"), []string{})
 
 		if err != nil {
 			return err
@@ -169,9 +173,10 @@ func TestLifecyclePhaseKeepsReleasesForever(t *testing.T) {
 }
 
 func TestLifecyclePhaseKeepsFilesForever(t *testing.T) {
-	test.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := test.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "20-lifecyclephasekeepsfilesforever"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "20-lifecyclephasekeepsfilesforever"), []string{})
 
 		if err != nil {
 			return err
