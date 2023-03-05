@@ -314,6 +314,8 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		cmnd.Dir = terraformProjectDir
 		out, err := cmnd.Output()
 
+		t.Log(string(out))
+
 		if err != nil {
 			exitError, ok := err.(*exec.ExitError)
 			if ok {
@@ -324,8 +326,6 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 
 			return err
 		}
-
-		t.Log(string(out))
 
 		// when initialising the new space, we need to define a new space name as a variable
 		vars := []string{}
@@ -348,6 +348,8 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 		cmnd.Dir = terraformProjectDir
 		out, err = cmnd.Output()
 
+		t.Log(string(out))
+
 		if err != nil {
 			exitError, ok := err.(*exec.ExitError)
 			if ok {
@@ -357,8 +359,6 @@ func initialiseOctopus(t *testing.T, container *OctopusContainer, terraformDir s
 			}
 			return err
 		}
-
-		t.Log(string(out))
 
 		// get the ID of any new space created, which will be used in the subsequent Terraform executions
 		spaceId, err = GetOutputVariable(t, terraformProjectDir, "octopus_space_id")
