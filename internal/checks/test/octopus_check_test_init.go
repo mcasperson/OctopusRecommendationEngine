@@ -52,6 +52,7 @@ func waitForServer(URL string, timeout time.Duration) error {
 			_, err := http.Get(URL)
 			if err == nil {
 				ch <- true
+				return
 			}
 			time.Sleep(time.Second)
 		}
