@@ -350,7 +350,7 @@ func (o *OctopusContainerTest) terraformApply(t *testing.T, terraformProjectDir 
 }
 
 // waitForSpace attempts to ensure the API and space is available before continuing
-func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
+func (o *OctopusContainerTest) waitForSpace(t *testing.T, server string, spaceId string) {
 	if os.Getenv("OCTOTESTWAITFORAPI") == "false" {
 		return
 	}
@@ -360,7 +360,7 @@ func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
 	// are sometimes proceeded with:
 	// "HTTP" "GET" to "localhost:32805""/api" "completed" with 503 in 00:00:00.0170358 (17ms) by "<anonymous>"
 	// So wait until we get a valid response from the API endpoint before applying terraform
-	lintwait.WaitForResource(func() error {
+	err := lintwait.WaitForResource(func() error {
 		response, err := http.Get(server + "/api")
 		if err != nil {
 			return err
@@ -371,8 +371,12 @@ func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
 		return nil
 	}, time.Minute)
 
+	if err != nil {
+		t.Log("Failed to contact Octopus API on " + server + "/api")
+	}
+
 	// Also wait for the space to be available
-	lintwait.WaitForResource(func() error {
+	err = lintwait.WaitForResource(func() error {
 		response, err := http.Get(server + "/api/" + spaceId)
 		if err != nil {
 			return err
@@ -382,6 +386,10 @@ func (o *OctopusContainerTest) waitForSpace(server string, spaceId string) {
 		}
 		return nil
 	}, time.Minute)
+
+	if err != nil {
+		t.Log("Failed to contact Octopus API on " + server + "/api/" + spaceId)
+	}
 }
 
 // initialiseOctopus uses Terraform to populate the test Octopus instance, making sure to clean up
@@ -418,7 +426,7 @@ func (o *OctopusContainerTest) initialiseOctopus(t *testing.T, container *Octopu
 			vars = populateVars
 		}
 
-		o.waitForSpace(container.URI, spaceId)
+		o.waitForSpace(t, container.URI, spaceId)
 
 		err = o.terraformApply(t, terraformProjectDir, container.URI, spaceId, vars)
 
