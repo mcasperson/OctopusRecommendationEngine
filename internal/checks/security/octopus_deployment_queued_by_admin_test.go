@@ -33,7 +33,7 @@ func TestDeployedByAdmin(t *testing.T) {
 			return err
 		}
 
-		projectId, err := test.GetOutputVariable(t, filepath.Join(dir, "15-deployedbyadmin"), "project_id")
+		projectId, err := testFramework.GetOutputVariable(t, filepath.Join(dir, "15-deployedbyadmin"), "project_id")
 
 		if err != nil {
 			return err

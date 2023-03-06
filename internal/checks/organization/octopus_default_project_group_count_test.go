@@ -94,7 +94,7 @@ func TestExcessiveProjectCountWithPermissionsError(t *testing.T) {
 			return err
 		}
 
-		serviceAccountId, err := test.GetOutputVariable(t, filepath.Join(dir, "14-limitedserviceaccount"), "service_account_id")
+		serviceAccountId, err := testFramework.GetOutputVariable(t, filepath.Join(dir, "14-limitedserviceaccount"), "service_account_id")
 
 		if err != nil {
 			return err
