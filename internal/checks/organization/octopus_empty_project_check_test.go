@@ -3,8 +3,8 @@ package organization
 import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/test"
 	"path/filepath"
 	"testing"
 )
@@ -13,7 +13,7 @@ func TestPopulatedDeploymentProcess(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "7-populateddeploymentprocess"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "7-populateddeploymentprocess", []string{})
 
 		if err != nil {
 			return err
@@ -46,7 +46,7 @@ func TestEmptyDeploymentProcess(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "6-emptydeploymentprocess"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "6-emptydeploymentprocess", []string{})
 
 		if err != nil {
 			return err

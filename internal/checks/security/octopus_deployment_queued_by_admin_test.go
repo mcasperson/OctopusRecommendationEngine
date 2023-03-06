@@ -7,9 +7,9 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/environments"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/releases"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/wait"
+	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/test"
+	"github.com/mcasperson/OctopusTerraformTestFramework/wait"
 	"path/filepath"
 	"testing"
 	"time"
@@ -19,8 +19,8 @@ func TestDeployedByAdmin(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		dir := filepath.Join("..", "..", "..", "test", "terraform", "15-deployedbyadmin")
-		newSpaceId, err := testFramework.Act(t, container, dir, []string{})
+		dir := filepath.Join("..", "..", "..", "test", "terraform")
+		newSpaceId, err := testFramework.Act(t, container, dir, "15-deployedbyadmin", []string{})
 
 		if err != nil {
 			return err
@@ -32,7 +32,7 @@ func TestDeployedByAdmin(t *testing.T) {
 			return err
 		}
 
-		projectId, err := test.GetOutputVariable(t, dir, "project_id")
+		projectId, err := test.GetOutputVariable(t, filepath.Join(dir, "15-deployedbyadmin"), "project_id")
 
 		if err != nil {
 			return err

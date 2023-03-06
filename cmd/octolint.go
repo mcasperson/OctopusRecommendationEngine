@@ -7,8 +7,8 @@ import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/factory"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/executor"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/reporters"
+	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
 	"os"
 	"time"
 )

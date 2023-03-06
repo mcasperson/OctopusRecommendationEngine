@@ -3,8 +3,8 @@ package organization
 import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/test"
 	"path/filepath"
 	"testing"
 )
@@ -13,7 +13,7 @@ func TestNormalEnvironmentCount(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "2-fewenvironments"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "2-fewenvironments", []string{})
 
 		if err != nil {
 			return err
@@ -46,7 +46,7 @@ func TestExcessiveEnvironmentCount(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "3-toomanyenvironments"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "3-toomanyenvironments", []string{})
 
 		if err != nil {
 			return err

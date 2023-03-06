@@ -4,8 +4,8 @@ import (
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/users"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/test"
-	"github.com/mcasperson/OctopusRecommendationEngine/internal/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
+	"github.com/mcasperson/OctopusTerraformTestFramework/test"
 	"path/filepath"
 	"testing"
 )
@@ -14,7 +14,7 @@ func TestNormalProjectCount(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "4-smallprojectcount"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "4-smallprojectcount", []string{})
 
 		if err != nil {
 			return err
@@ -47,7 +47,7 @@ func TestExcessiveProjectCount(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform", "5-largeprojectcount"), []string{})
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "5-largeprojectcount", []string{})
 
 		if err != nil {
 			return err
@@ -80,8 +80,8 @@ func TestExcessiveProjectCountWithPermissionsError(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
 		// Act
-		dir := filepath.Join("..", "..", "..", "test", "terraform", "14-limitedserviceaccount")
-		newSpaceId, err := testFramework.Act(t, container, dir, []string{})
+		dir := filepath.Join("..", "..", "..", "test", "terraform")
+		newSpaceId, err := testFramework.Act(t, container, dir, "14-limitedserviceaccount", []string{})
 
 		if err != nil {
 			return err
@@ -93,7 +93,7 @@ func TestExcessiveProjectCountWithPermissionsError(t *testing.T) {
 			return err
 		}
 
-		serviceAccountId, err := test.GetOutputVariable(t, dir, "service_account_id")
+		serviceAccountId, err := test.GetOutputVariable(t, filepath.Join(dir, "14-limitedserviceaccount"), "service_account_id")
 
 		if err != nil {
 			return err
