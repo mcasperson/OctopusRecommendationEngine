@@ -74,6 +74,7 @@ jobs:
           LICENSE: ${{ secrets.LICENSE }}
           # Reuse any Terraform plugins between tests
           TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}
+          OCTOTESTDUMPSTATE: !!str true
       - if: always()
         name: Report
         uses: dorny/test-reporter@v1

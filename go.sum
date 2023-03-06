@@ -87,6 +87,8 @@ github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peK
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230306073749-37d9403906bb h1:IQYBI4lukGlXB/+cc0xzXzCePXA5T7CKvDUjlOS9Sok=
 github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230306073749-37d9403906bb/go.mod h1:k6LkAcykjgqJYo9vVyfD7X96E85aAVrLlljtKMr27wU=
+github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230306082202-3d7fc230681c h1:HI9qOILr9v0QuKj7pkfG6GT0wJKy1HfrTjHARHeETAM=
+github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230306082202-3d7fc230681c/go.mod h1:k6LkAcykjgqJYo9vVyfD7X96E85aAVrLlljtKMr27wU=
 github.com/moby/patternmatcher v0.5.0 h1:YCZgJOeULcxLw1Q+sVR636pmS7sPEn1Qo2iAN6M7DBo=
 github.com/moby/patternmatcher v0.5.0/go.mod h1:hDPoyOpDY7OrrMDLaYoY3hf52gNCR/YOUYxkhApJIxc=
 github.com/moby/sys/mountinfo v0.5.0/go.mod h1:3bMD3Rg+zkqx8MRYPi7Pyb0Ie97QEBmdxbhnCLlSvSU=
