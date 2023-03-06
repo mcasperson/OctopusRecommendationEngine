@@ -1,6 +1,7 @@
 package security
 
 import (
+	"errors"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/channels"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/deployments"
@@ -133,7 +134,7 @@ func TestDeployedByAdmin(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Warning {
-			t.Fatal("Check should have returned a warning")
+			return errors.New("Check should have returned a warning")
 		}
 
 		return nil

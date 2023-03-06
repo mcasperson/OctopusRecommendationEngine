@@ -1,6 +1,7 @@
 package organization
 
 import (
+	"errors"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
@@ -51,7 +52,7 @@ func TestLifecyclesMeetRecommendations(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Ok {
-			t.Fatal("Check should have passed")
+			return errors.New("Check should have passed")
 		}
 
 		return nil
@@ -89,7 +90,7 @@ func TestLifecycleKeepsReleasesForever(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Warning {
-			t.Fatal("Check should have produced a warning")
+			return errors.New("Check should have produced a warning")
 		}
 
 		return nil
@@ -127,7 +128,7 @@ func TestLifecycleKeepsFilesForever(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Warning {
-			t.Fatal("Check should have produced a warning")
+			return errors.New("Check should have produced a warning")
 		}
 
 		return nil
@@ -165,7 +166,7 @@ func TestLifecyclePhaseKeepsReleasesForever(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Warning {
-			t.Fatal("Check should have produced a warning")
+			return errors.New("Check should have produced a warning")
 		}
 
 		return nil
@@ -203,7 +204,7 @@ func TestLifecyclePhaseKeepsFilesForever(t *testing.T) {
 
 		// Assert
 		if result.Severity() != checks.Warning {
-			t.Fatal("Check should have produced a warning")
+			return errors.New("Check should have produced a warning")
 		}
 
 		return nil
