@@ -8,6 +8,8 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 
 This tool is **not** supported by Octopus. Feel free to report an [issue](https://github.com/mcasperson/OctopusRecommendationEngine/issues).
 
+This tool is also in an alpha state. We expect to add more checks and tweak the code before things stabalize.
+
 ## Usage
 
 Download the latest binary from the [releases](https://github.com/mcasperson/OctopusRecommendationEngine/releases/latest).
