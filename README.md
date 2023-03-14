@@ -6,13 +6,15 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 
 ## Support
 
-This tool is **not** supported by Octopus. Feel free to report an [issue](https://github.com/mcasperson/OctopusRecommendationEngine/issues).
+This tool is **not** supported by Octopus. Feel free to report
+an [issue](https://github.com/mcasperson/OctopusRecommendationEngine/issues).
 
 This tool is also in an alpha state. We expect to add more checks and tweak the code before things stabalize.
 
 ## Usage
 
-Download the latest binary from the [releases](https://github.com/mcasperson/OctopusRecommendationEngine/releases/latest).
+Download the latest binary from
+the [releases](https://github.com/mcasperson/OctopusRecommendationEngine/releases/latest).
 
 ```
 ./octolint \
@@ -38,19 +40,20 @@ This is an example of the tool output:
 | Check ID (* Not Implemented Yet)                | Description                                                                             |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------|
 | OctoRecEnvironmentCount                         | Counts the number of environments in the space.                                         |
- | OctoRecDefaultProjectGroupChildCount            | Counts the number of projects in the default project group.                             |
- | OctoRecEmptyProject                             | Finds projects with no deployment process and no runbooks.                              |
- | OctoRecProjectSpecificEnvs *                    | Finds environments that are specific to a single project.                               |
+| OctoRecDefaultProjectGroupChildCount            | Counts the number of projects in the default project group.                             |
+| OctoRecEmptyProject                             | Finds projects with no deployment process and no runbooks.                              |
+| OctoRecProjectSpecificEnvs *                    | Finds environments that are specific to a single project.                               |
 | OctoRecUnusedVariables                          | Finds unused variables in a project.                                                    |
- | OctoRecDuplicatedVariables                      | Finds variables with duplicated values.                                                 |
- | OctoRecDeploymentQueuedByAdmin                  | Finds deployments initiated by someone with admin credentials.                          |
- | OctoRecPerpetualApiKeys *                       | Finds API keys that do not expire.                                                      |
- | OctoRecUnusedApiKeys *                          | Finds API keys that have not been used in 30 days.                                      |
- | OctoRecSinglePhaseLifecycle *                   | Finds lifecycles with a single phase.                                                   |
- | OctoRecProjectGroupsWithExclusiveEnvironments * | Finds project groups with projects that have no common environments.                    |
+| OctoRecDuplicatedVariables                      | Finds variables with duplicated values.                                                 |
+| OctoRecDeploymentQueuedByAdmin                  | Finds deployments initiated by someone with admin credentials.                          |
+| OctoRecPerpetualApiKeys *                       | Finds API keys that do not expire.                                                      |
+| OctoRecUnusedApiKeys *                          | Finds API keys that have not been used in 30 days.                                      |
+| OctoRecSinglePhaseLifecycle *                   | Finds lifecycles with a single phase.                                                   |
+| OctoRecProjectGroupsWithExclusiveEnvironments * | Finds project groups with projects that have no common environments.                    |
 | OctoRecSharedCloudAccounts *                    | Finds accounts that are shared between project groups.                                  |
- | OctoRecTooManySteps                             | Finds projects with too many deployment steps.                                          |
+| OctoRecTooManySteps                             | Finds projects with too many deployment steps.                                          |
 | OctoRecDirectTenantReferences *                 | Finds projects that reference common groups of tenants directly rather than using tags. |
- | OctoRecUnhealthyTargets *                       | Finds targets that have not been healthy in the last 30 days.                           |
- | OctoRecSharedGitUsername *                      | Finds projects that share git credentials.                                              |
- | OctoRecDeploymentQueuedTime                     | Counts how many times deployment tasks were queued for more than a minute.              |
+| OctoRecUnhealthyTargets *                       | Finds targets that have not been healthy in the last 30 days.                           |
+| OctoRecSharedGitUsername *                      | Finds projects that share git credentials.                                              |
+| OctoRecDeploymentQueuedTime                     | Counts how many times deployment tasks were queued for more than a minute.              |
+| OctoRecUnusedTargets                            | Lists targets that have not performed a deployment in 30 days.                          |
