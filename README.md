@@ -50,7 +50,7 @@ This is an example of the tool output:
 | OctoRecProjectGroupsWithExclusiveEnvironments * | Finds project groups with projects that have no common environments.                    |
 | OctoRecSharedCloudAccounts *                    | Finds accounts that are shared between project groups.                                  |
 | OctoRecTooManySteps                             | Finds projects with too many deployment steps.                                          |
-| OctoRecDirectTenantReferences *                 | Finds projects that reference common groups of tenants directly rather than using tags. |
+| OctoRecDirectTenantReferences                   | Finds projects that reference common groups of tenants directly rather than using tags. |
 | OctoRecUnhealthyTargets *                       | Finds targets that have not been healthy in the last 30 days.                           |
 | OctoRecSharedGitUsername *                      | Finds projects that share git credentials.                                              |
 | OctoRecDeploymentQueuedTime                     | Counts how many times deployment tasks were queued for more than a minute.              |

@@ -30,6 +30,7 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusLifecycleRetentionPolicyCheck(o.client, o.errorHandler),
 		organization.NewOctopusUnusedTargetsCheck(o.client, o.errorHandler),
 		organization.NewOctopusProjectSpecificEnvironmentCheck(o.client, o.errorHandler),
+		organization.NewOctopusTenantsInsteadOfTagsCheck(o.client, o.errorHandler),
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
 		security.NewOctopusPerpetualApiKeysCheck(o.client, o.errorHandler),
 		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.errorHandler),
