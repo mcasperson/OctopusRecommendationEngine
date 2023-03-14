@@ -22,7 +22,7 @@ func NewOctopusDefaultProjectGroupCountCheck(client *client.Client, errorHandler
 }
 
 func (o OctopusDefaultProjectGroupCountCheck) Id() string {
-	return "OctoRecDefaultProjectGroupChildCount"
+	return "OctoLintDefaultProjectGroupChildCount"
 }
 
 func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResult, error) {

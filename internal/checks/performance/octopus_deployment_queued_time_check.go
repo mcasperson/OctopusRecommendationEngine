@@ -23,7 +23,7 @@ func NewOctopusDeploymentQueuedTimeCheck(client *client.Client, errorHandler che
 }
 
 func (o OctopusDeploymentQueuedTimeCheck) Id() string {
-	return "OctoRecDeploymentQueuedTime"
+	return "OctoLintDeploymentQueuedTime"
 }
 
 func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, error) {

@@ -21,7 +21,7 @@ func NewOctopusTenantsInsteadOfTagsCheck(client *client.Client, errorHandler che
 }
 
 func (o OctopusTenantsInsteadOfTagsCheck) Id() string {
-	return "OctoRecDirectTenantReferences"
+	return "OctoLintDirectTenantReferences"
 }
 
 func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, error) {

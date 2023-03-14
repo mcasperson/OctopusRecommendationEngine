@@ -21,7 +21,7 @@ func NewOctopusEnvironmentCountCheck(client *client.Client, errorHandler checks.
 }
 
 func (o OctopusEnvironmentCountCheck) Id() string {
-	return "OctoRecEnvironmentCount"
+	return "OctoLintEnvironmentCount"
 }
 
 func (o OctopusEnvironmentCountCheck) Execute() (checks.OctopusCheckResult, error) {

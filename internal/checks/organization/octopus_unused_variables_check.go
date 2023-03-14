@@ -22,7 +22,7 @@ func NewOctopusUnusedVariablesCheck(client *client.Client, errorHandler checks.O
 }
 
 func (o OctopusUnusedVariablesCheck) Id() string {
-	return "OctoRecUnusedVariables"
+	return "OctoLintUnusedVariables"
 }
 
 func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error) {

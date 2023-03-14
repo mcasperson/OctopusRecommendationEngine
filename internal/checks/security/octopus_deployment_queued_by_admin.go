@@ -23,7 +23,7 @@ func NewOctopusDeploymentQueuedByAdminCheck(client *client.Client, errorHandler 
 }
 
 func (o OctopusDeploymentQueuedByAdminCheck) Id() string {
-	return "OctoRecDeploymentQueuedByAdmin"
+	return "OctoLintDeploymentQueuedByAdmin"
 }
 
 func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResult, error) {

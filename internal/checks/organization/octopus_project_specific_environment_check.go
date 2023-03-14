@@ -21,7 +21,7 @@ func NewOctopusProjectSpecificEnvironmentCheck(client *client.Client, errorHandl
 }
 
 func (o OctopusProjectSpecificEnvironmentCheck) Id() string {
-	return "OctoRecProjectSpecificEnvs"
+	return "OctoLintProjectSpecificEnvs"
 }
 
 func (o OctopusProjectSpecificEnvironmentCheck) Execute() (checks.OctopusCheckResult, error) {

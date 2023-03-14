@@ -32,7 +32,7 @@ func NewOctopusPerpetualApiKeysCheck(client *client.Client, errorHandler checks.
 }
 
 func (o OctopusPerpetualApiKeysCheck) Id() string {
-	return "OctoRecPerpetualApiKeys"
+	return "OctoLintPerpetualApiKeys"
 }
 
 func (o OctopusPerpetualApiKeysCheck) Execute() (checks.OctopusCheckResult, error) {

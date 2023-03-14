@@ -30,7 +30,7 @@ func NewOctopusDuplicatedVariablesCheck(client *client.Client, errorHandler chec
 }
 
 func (o OctopusDuplicatedVariablesCheck) Id() string {
-	return "OctoRecDuplicatedVariables"
+	return "OctoLintDuplicatedVariables"
 }
 
 func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, error) {

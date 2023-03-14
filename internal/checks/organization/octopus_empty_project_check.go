@@ -19,7 +19,7 @@ func NewOctopusEmptyProjectCheck(client *client.Client, errorHandler checks.Octo
 }
 
 func (o OctopusEmptyProjectCheck) Id() string {
-	return "OctoRecEmptyProject"
+	return "OctoLintEmptyProject"
 }
 
 func (o OctopusEmptyProjectCheck) Execute() (checks.OctopusCheckResult, error) {

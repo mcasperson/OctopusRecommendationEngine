@@ -21,7 +21,7 @@ func NewOctopusProjectTooManyStepsCheck(client *client.Client, errorHandler chec
 }
 
 func (o OctopusProjectTooManyStepsCheck) Id() string {
-	return "OctoRecTooManySteps"
+	return "OctoLintTooManySteps"
 }
 
 func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, error) {

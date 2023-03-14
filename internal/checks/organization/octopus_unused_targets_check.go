@@ -27,7 +27,7 @@ func NewOctopusUnusedTargetsCheck(client *client.Client, errorHandler checks.Oct
 }
 
 func (o OctopusUnusedTargetsCheck) Id() string {
-	return "OctoRecUnusedTargets"
+	return "OctoLintUnusedTargets"
 }
 
 func (o OctopusUnusedTargetsCheck) Execute() (checks.OctopusCheckResult, error) {
