@@ -41,17 +41,34 @@ func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, 
 		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
+	allCertificates, err := o.client.Certificates.GetAll()
+
+	if err != nil {
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+	}
+
+	allMachines, err := o.client.Machines.GetAll()
+
+	if err != nil {
+		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+	}
+
 	tenantReferences := map[string]int{}
 	for _, a := range allAccounts {
 		if a.GetTenantedDeploymentMode() == core.TenantedDeploymentModeTenantedOrUntenanted {
-			tenantIds := a.GetTenantIDs()
-			slices.Sort(tenantIds)
-			tenants := strings.Join(tenantIds, ",")
+			o.addTenants(a.GetTenantIDs(), tenantReferences)
+		}
+	}
 
-			if _, ok := tenantReferences[tenants]; !ok {
-				tenantReferences[tenants] = 0
-			}
-			tenantReferences[tenants]++
+	for _, c := range allCertificates {
+		if c.TenantedDeploymentMode == core.TenantedDeploymentModeTenantedOrUntenanted {
+			o.addTenants(c.TenantIDs, tenantReferences)
+		}
+	}
+
+	for _, m := range allMachines {
+		if m.TenantedDeploymentMode == core.TenantedDeploymentModeTenantedOrUntenanted {
+			o.addTenants(m.TenantIDs, tenantReferences)
 		}
 	}
 
@@ -100,4 +117,14 @@ func (o OctopusTenantsInsteadOfTagsCheck) getTenantNameById(tenants []*tenants.T
 	}
 
 	return ""
+}
+
+func (o OctopusTenantsInsteadOfTagsCheck) addTenants(tenantIds []string, tenantReferences map[string]int) {
+	slices.Sort(tenantIds)
+	tenants := strings.Join(tenantIds, ",")
+
+	if _, ok := tenantReferences[tenants]; !ok {
+		tenantReferences[tenants] = 0
+	}
+	tenantReferences[tenants]++
 }
