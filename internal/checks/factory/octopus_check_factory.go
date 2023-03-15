@@ -34,6 +34,7 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusProjectGroupsWithExclusiveEnvironmentsCheck(o.client, o.errorHandler),
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
 		security.NewOctopusPerpetualApiKeysCheck(o.client, o.errorHandler),
+		security.NewOctopusDuplicatedGitCredentialsCheck(o.client, o.errorHandler),
 		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.errorHandler),
 	}, nil
 }

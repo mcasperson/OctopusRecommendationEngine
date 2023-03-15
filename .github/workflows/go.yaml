@@ -76,6 +76,9 @@ jobs:
           TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}
           OCTOTESTDUMPSTATE: !!str true
           OCTOTESTDEFAULTSPACEID: Spaces-2
+          TEST_GIT_REPO: ${{ secrets.TEST_GIT_REPO }}
+          TEST_GIT_PASSWORD: ${{ secrets.TEST_GIT_PASSWORD }}
+          TEST_GIT_USERNAME: ${{ secrets.TEST_GIT_USERNAME }}
       - if: always()
         name: Report
         uses: dorny/test-reporter@v1

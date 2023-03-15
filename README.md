@@ -52,6 +52,6 @@ This is an example of the tool output:
 | OctoLintTooManySteps                           | Finds projects with too many deployment steps.                                          |
 | OctoLintDirectTenantReferences                 | Finds projects that reference common groups of tenants directly rather than using tags. |
 | OctoLintUnhealthyTargets *                     | Finds targets that have not been healthy in the last 30 days.                           |
-| OctoLintSharedGitUsername *                    | Finds projects that share git credentials.                                              |
+| OctoLintSharedGitUsername                      | Finds projects that share git credentials.                                              |
 | OctoLintDeploymentQueuedTime                   | Counts how many times deployment tasks were queued for more than a minute.              |
 | OctoLintUnusedTargets                          | Lists targets that have not performed a deployment in 30 days.                          |
