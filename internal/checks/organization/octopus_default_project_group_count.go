@@ -34,7 +34,7 @@ func (o OctopusDefaultProjectGroupCountCheck) Execute() (checks.OctopusCheckResu
 
 	if err != nil {
 		apiError, ok := err.(*core.APIError)
-		if ok && apiError.StatusCode == 404 {
+		if (ok && apiError.StatusCode == 404) || err.Error() == "cannot find the item" {
 			return checks.NewOctopusCheckResultImpl(
 				"The default project group was not found",
 				o.Id(),
