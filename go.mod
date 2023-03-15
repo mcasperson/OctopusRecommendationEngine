@@ -6,7 +6,7 @@ require (
 	github.com/OctopusDeploy/go-octopusdeploy/v2 v2.21.0
 	github.com/avast/retry-go/v4 v4.3.3
 	github.com/briandowns/spinner v1.22.0
-	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230315093546-08929bc716c2
+	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230315195304-bc8c89cbd07a
 	golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
 )
 
