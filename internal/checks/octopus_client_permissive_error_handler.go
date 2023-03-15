@@ -32,7 +32,8 @@ func (o OctopusClientPermissiveErrorHandler) ShouldContinue(err error) bool {
 		return apiError.StatusCode == http.StatusUnauthorized ||
 			apiError.StatusCode == http.StatusForbidden ||
 			apiError.StatusCode == http.StatusNotFound ||
-			strings.Index(strings.ToLower(apiError.ErrorMessage), "you do not have permission") != -1
+			strings.Index(strings.ToLower(apiError.ErrorMessage), "you do not have permission") != -1 ||
+			strings.Index(strings.ToLower(apiError.ErrorMessage), "Support for password authentication was removed") != -1
 	}
 	return true
 }
