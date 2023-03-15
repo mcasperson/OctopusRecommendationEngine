@@ -53,28 +53,29 @@ func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, 
 		return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
 	}
 
-	tenantReferences := map[string]int{}
+	tenantReferenceCounts := map[string]int{}
+	tenantReferenceSources := map[string][]string{}
 	for _, a := range allAccounts {
 		if a.GetTenantedDeploymentMode() == core.TenantedDeploymentModeTenantedOrUntenanted {
-			o.addTenants(a.GetTenantIDs(), tenantReferences)
+			o.addTenants(a.GetTenantIDs(), "Account - "+a.GetName(), tenantReferenceCounts, tenantReferenceSources)
 		}
 	}
 
 	for _, c := range allCertificates {
 		if c.TenantedDeploymentMode == core.TenantedDeploymentModeTenantedOrUntenanted {
-			o.addTenants(c.TenantIDs, tenantReferences)
+			o.addTenants(c.TenantIDs, "Certificate - "+c.Name, tenantReferenceCounts, tenantReferenceSources)
 		}
 	}
 
 	for _, m := range allMachines {
 		if m.TenantedDeploymentMode == core.TenantedDeploymentModeTenantedOrUntenanted {
-			o.addTenants(m.TenantIDs, tenantReferences)
+			o.addTenants(m.TenantIDs, "Target - "+m.Name, tenantReferenceCounts, tenantReferenceSources)
 		}
 	}
 
 	// get any commonly grouped tenants
 	multipleTenantReferences := []string{}
-	for tenantGroups, groupCount := range tenantReferences {
+	for tenantGroups, groupCount := range tenantReferenceCounts {
 		if groupCount > 1 {
 			multipleTenantReferences = append(multipleTenantReferences, tenantGroups)
 		}
@@ -90,7 +91,7 @@ func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, 
 			for _, splitTenant := range splitTenants {
 				splitTenantNames = append(splitTenantNames, o.getTenantNameById(allTenants, splitTenant))
 			}
-			groupedTenants = append(groupedTenants, strings.Join(splitTenantNames, ", "))
+			groupedTenants = append(groupedTenants, strings.Join(splitTenantNames, ", ")+" ("+strings.Join(tenantReferenceSources[groupedTenant], " ,")+")")
 		}
 
 		return checks.NewOctopusCheckResultImpl(
@@ -119,7 +120,7 @@ func (o OctopusTenantsInsteadOfTagsCheck) getTenantNameById(tenants []*tenants.T
 	return ""
 }
 
-func (o OctopusTenantsInsteadOfTagsCheck) addTenants(tenantIds []string, tenantReferences map[string]int) {
+func (o OctopusTenantsInsteadOfTagsCheck) addTenants(tenantIds []string, source string, tenantReferences map[string]int, tenantReferenceSources map[string][]string) {
 	slices.Sort(tenantIds)
 	tenants := strings.Join(tenantIds, ",")
 
@@ -127,4 +128,9 @@ func (o OctopusTenantsInsteadOfTagsCheck) addTenants(tenantIds []string, tenantR
 		tenantReferences[tenants] = 0
 	}
 	tenantReferences[tenants]++
+
+	if _, ok := tenantReferenceSources[tenants]; !ok {
+		tenantReferenceSources[tenants] = []string{}
+	}
+	tenantReferenceSources[tenants] = append(tenantReferenceSources[tenants], source)
 }
