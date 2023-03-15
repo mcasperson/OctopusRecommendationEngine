@@ -48,7 +48,6 @@ This is an example of the tool output:
 | OctoLintDeploymentQueuedByAdmin                | Finds deployments initiated by someone with admin credentials.                          |
 | OctoLintPerpetualApiKeys                       | Finds API keys that do not expire.                                                      |
 | OctoLintProjectGroupsWithExclusiveEnvironments | Finds project groups with projects that have no common environments.                    |
-| OctoLintSharedCloudAccounts *                  | Finds accounts that are shared between project groups.                                  |
 | OctoLintTooManySteps                           | Finds projects with too many deployment steps.                                          |
 | OctoLintDirectTenantReferences                 | Finds projects that reference common groups of tenants directly rather than using tags. |
 | OctoLintUnhealthyTargets                       | Finds targets that have not been healthy in the last 30 days.                           |
