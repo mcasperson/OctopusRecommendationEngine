@@ -43,6 +43,39 @@ func TestNoUnusedVars(t *testing.T) {
 	})
 }
 
+func TestNoUnusedVarsInOneHundrenProjects(t *testing.T) {
+	testFramework := test.OctopusContainerTest{}
+	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
+		// Act
+		newSpaceId, err := testFramework.Act(t, container, filepath.Join("..", "..", "..", "test", "terraform"), "29-hundredsofprojects", []string{})
+
+		if err != nil {
+			return err
+		}
+
+		newSpaceClient, err := octoclient.CreateClient(container.URI, newSpaceId, test.ApiKey)
+
+		if err != nil {
+			return err
+		}
+
+		check := NewOctopusUnusedVariablesCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
+
+		result, err := check.Execute()
+
+		if err != nil {
+			return err
+		}
+
+		// Assert
+		if result.Severity() != checks.Ok {
+			return errors.New("Check should have passed")
+		}
+
+		return nil
+	})
+}
+
 func TestUnusedVars(t *testing.T) {
 	testFramework := test.OctopusContainerTest{}
 	testFramework.ArrangeTest(t, func(t *testing.T, container *test.OctopusContainer, client *client.Client) error {
