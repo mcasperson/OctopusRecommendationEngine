@@ -91,7 +91,7 @@ func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, 
 			for _, splitTenant := range splitTenants {
 				splitTenantNames = append(splitTenantNames, o.getTenantNameById(allTenants, splitTenant))
 			}
-			groupedTenants = append(groupedTenants, strings.Join(splitTenantNames, ", ")+" ("+strings.Join(tenantReferenceSources[groupedTenant], " ,")+")")
+			groupedTenants = append(groupedTenants, strings.Join(splitTenantNames, ", ")+" ("+strings.Join(tenantReferenceSources[groupedTenant], ", ")+")")
 		}
 
 		return checks.NewOctopusCheckResultImpl(
