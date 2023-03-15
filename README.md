@@ -54,3 +54,4 @@ This is an example of the tool output:
 | OctoLintSharedGitUsername                      | Finds projects that share git credentials.                                              |
 | OctoLintDeploymentQueuedTime                   | Counts how many times deployment tasks were queued for more than a minute.              |
 | OctoLintUnusedTargets                          | Lists targets that have not performed a deployment in 30 days.                          |
+| OctoRecLifecycleRetention                      | Lists lifecycles that retain resources forever.                                         |
