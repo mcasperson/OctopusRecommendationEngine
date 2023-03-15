@@ -121,6 +121,10 @@ func (o OctopusTenantsInsteadOfTagsCheck) getTenantNameById(tenants []*tenants.T
 }
 
 func (o OctopusTenantsInsteadOfTagsCheck) addTenants(tenantIds []string, source string, tenantReferences map[string]int, tenantReferenceSources map[string][]string) {
+	if len(tenantIds) <= 1 {
+		return
+	}
+
 	slices.Sort(tenantIds)
 	tenants := strings.Join(tenantIds, ",")
 
