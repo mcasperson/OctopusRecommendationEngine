@@ -37,21 +37,21 @@ This is an example of the tool output:
 
 ## Checks
 
-| Check ID (* Not Implemented Yet)                 | Description                                                                             |
-|--------------------------------------------------|-----------------------------------------------------------------------------------------|
-| OctoLintEnvironmentCount                         | Counts the number of environments in the space.                                         |
-| OctoLintDefaultProjectGroupChildCount            | Counts the number of projects in the default project group.                             |
-| OctoLintEmptyProject                             | Finds projects with no deployment process and no runbooks.                              |
-| OctoLintProjectSpecificEnvs                      | Finds environments that are specific to a single project.                               |
-| OctoLintUnusedVariables                          | Finds unused variables in a project.                                                    |
-| OctoLintDuplicatedVariables                      | Finds variables with duplicated values.                                                 |
-| OctoLintDeploymentQueuedByAdmin                  | Finds deployments initiated by someone with admin credentials.                          |
-| OctoLintPerpetualApiKeys                         | Finds API keys that do not expire.                                                      |
-| OctoLintProjectGroupsWithExclusiveEnvironments * | Finds project groups with projects that have no common environments.                    |
-| OctoLintSharedCloudAccounts *                    | Finds accounts that are shared between project groups.                                  |
-| OctoLintTooManySteps                             | Finds projects with too many deployment steps.                                          |
-| OctoLintDirectTenantReferences                   | Finds projects that reference common groups of tenants directly rather than using tags. |
-| OctoLintUnhealthyTargets *                       | Finds targets that have not been healthy in the last 30 days.                           |
-| OctoLintSharedGitUsername *                      | Finds projects that share git credentials.                                              |
-| OctoLintDeploymentQueuedTime                     | Counts how many times deployment tasks were queued for more than a minute.              |
-| OctoLintUnusedTargets                            | Lists targets that have not performed a deployment in 30 days.                          |
+| Check ID (* Not Implemented Yet)               | Description                                                                             |
+|------------------------------------------------|-----------------------------------------------------------------------------------------|
+| OctoLintEnvironmentCount                       | Counts the number of environments in the space.                                         |
+| OctoLintDefaultProjectGroupChildCount          | Counts the number of projects in the default project group.                             |
+| OctoLintEmptyProject                           | Finds projects with no deployment process and no runbooks.                              |
+| OctoLintProjectSpecificEnvs                    | Finds environments that are specific to a single project.                               |
+| OctoLintUnusedVariables                        | Finds unused variables in a project.                                                    |
+| OctoLintDuplicatedVariables                    | Finds variables with duplicated values.                                                 |
+| OctoLintDeploymentQueuedByAdmin                | Finds deployments initiated by someone with admin credentials.                          |
+| OctoLintPerpetualApiKeys                       | Finds API keys that do not expire.                                                      |
+| OctoLintProjectGroupsWithExclusiveEnvironments | Finds project groups with projects that have no common environments.                    |
+| OctoLintSharedCloudAccounts *                  | Finds accounts that are shared between project groups.                                  |
+| OctoLintTooManySteps                           | Finds projects with too many deployment steps.                                          |
+| OctoLintDirectTenantReferences                 | Finds projects that reference common groups of tenants directly rather than using tags. |
+| OctoLintUnhealthyTargets *                     | Finds targets that have not been healthy in the last 30 days.                           |
+| OctoLintSharedGitUsername *                    | Finds projects that share git credentials.                                              |
+| OctoLintDeploymentQueuedTime                   | Counts how many times deployment tasks were queued for more than a minute.              |
+| OctoLintUnusedTargets                          | Lists targets that have not performed a deployment in 30 days.                          |
