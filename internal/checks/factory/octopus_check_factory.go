@@ -32,6 +32,7 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		organization.NewOctopusProjectSpecificEnvironmentCheck(o.client, o.errorHandler),
 		organization.NewOctopusTenantsInsteadOfTagsCheck(o.client, o.errorHandler),
 		organization.NewOctopusProjectGroupsWithExclusiveEnvironmentsCheck(o.client, o.errorHandler),
+		organization.NewOctopusUnhealthyTargetCheck(o.client, o.errorHandler),
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
 		security.NewOctopusPerpetualApiKeysCheck(o.client, o.errorHandler),
 		security.NewOctopusDuplicatedGitCredentialsCheck(o.client, o.errorHandler),
