@@ -39,19 +39,19 @@ This is an example of the tool output:
 
 | Check ID (* Not Implemented Yet)               | Description                                                                             |
 |------------------------------------------------|-----------------------------------------------------------------------------------------|
-| OctoLintEnvironmentCount                       | Counts the number of environments in the space.                                         |
-| OctoLintDefaultProjectGroupChildCount          | Counts the number of projects in the default project group.                             |
-| OctoLintEmptyProject                           | Finds projects with no deployment process and no runbooks.                              |
-| OctoLintProjectSpecificEnvs                    | Finds environments that are specific to a single project.                               |
-| OctoLintUnusedVariables                        | Finds unused variables in a project.                                                    |
-| OctoLintDuplicatedVariables                    | Finds variables with duplicated values.                                                 |
-| OctoLintDeploymentQueuedByAdmin                | Finds deployments initiated by someone with admin credentials.                          |
-| OctoLintPerpetualApiKeys                       | Finds API keys that do not expire.                                                      |
-| OctoLintProjectGroupsWithExclusiveEnvironments | Finds project groups with projects that have no common environments.                    |
-| OctoLintTooManySteps                           | Finds projects with too many deployment steps.                                          |
-| OctoLintDirectTenantReferences                 | Finds projects that reference common groups of tenants directly rather than using tags. |
-| OctoLintUnhealthyTargets                       | Finds targets that have not been healthy in the last 30 days.                           |
-| OctoLintSharedGitUsername                      | Finds projects that share git credentials.                                              |
-| OctoLintDeploymentQueuedTime                   | Counts how many times deployment tasks were queued for more than a minute.              |
-| OctoLintUnusedTargets                          | Lists targets that have not performed a deployment in 30 days.                          |
-| OctoRecLifecycleRetention                      | Lists lifecycles that retain resources forever.                                         |
+| [OctoLintEnvironmentCount](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintEnvironmentCount)                       | Counts the number of environments in the space.                                         |
+| [OctoLintDefaultProjectGroupChildCount](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintDefaultProjectGroupChildCount)          | Counts the number of projects in the default project group.                             |
+| [OctoLintEmptyProject](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintEmptyProject)                           | Finds projects with no deployment process and no runbooks.                              |
+| [OctoLintProjectSpecificEnvs](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintProjectSpecificEnvs)                    | Finds environments that are specific to a single project.                               |
+| [OctoLintUnusedVariables](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintUnusedVariables)                        | Finds unused variables in a project.                                                    |
+| [OctoLintDuplicatedVariables](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintDuplicatedVariables)                    | Finds variables with duplicated values.                                                 |
+| [OctoLintDeploymentQueuedByAdmin](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintDeploymentQueuedByAdmin)                | Finds deployments initiated by someone with admin credentials.                          |
+| [OctoLintPerpetualApiKeys](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintPerpetualApiKeys)                       | Finds API keys that do not expire.                                                      |
+| [OctoLintProjectGroupsWithExclusiveEnvironments](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintProjectGroupsWithExclusiveEnvironments) | Finds project groups with projects that have no common environments.                    |
+| [OctoLintTooManySteps](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintTooManySteps)                           | Finds projects with too many deployment steps.                                          |
+| [OctoLintDirectTenantReferences](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintDirectTenantReferences)                 | Finds projects that reference common groups of tenants directly rather than using tags. |
+| [OctoLintUnhealthyTargets](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintUnhealthyTargets)                       | Finds targets that have not been healthy in the last 30 days.                           |
+| [OctoLintSharedGitUsername](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintSharedGitUsername)                      | Finds projects that share git credentials.                                              |
+| [OctoLintDeploymentQueuedTime](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintDeploymentQueuedTime)                   | Counts how many times deployment tasks were queued for more than a minute.              |
+| [OctoLintUnusedTargets](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoLintUnusedTargets)                          | Lists targets that have not performed a deployment in 30 days.                          |
+| [OctoRecLifecycleRetention](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/wiki/OctoRecLifecycleRetention)                      | Lists lifecycles that retain resources forever.                                         |
