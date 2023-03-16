@@ -9,6 +9,7 @@ import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"golang.org/x/exp/slices"
 	"strings"
+	"time"
 )
 
 // OctopusDeploymentQueuedByAdminCheck checks to see if any deployments were initiated by someone from the admin teams.
@@ -31,86 +32,83 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 		return nil, errors.New("octoclient is nil")
 	}
 
-	resource, err := o.client.Events.Get(events.EventsQuery{
-		EventCategories: []string{"DeploymentQueued"},
-		Skip:            0,
-		Take:            1000,
-	})
+	projects, err := o.client.Projects.GetAll()
 
 	if err != nil {
 		return o.errorHandler.HandleError(o.Id(), checks.Security, err)
 	}
 
-	if resource != nil {
-		projectsDeployedByAdmins := []string{}
-		projects := []string{}
-		for _, r := range resource.Items {
-			projectId := o.getProjectFromRelatedDocs(r)
+	teams, err := o.getAdminTeams()
+	
+	if err != nil {
+		if !o.errorHandler.ShouldContinue(err) {
+			return nil, err
+		}
+	}
 
-			if projectId == "" {
-				continue
-			}
+	projectsDeployedByAdmins := []string{}
 
-			project, err := o.client.Projects.GetByID(projectId)
+	now := time.Now()
+	fromDate := now.AddDate(0, -3, 0)
+	from := fromDate.Format("2006-01-02")
 
-			if err != nil {
-				if !o.errorHandler.ShouldContinue(err) {
-					return nil, err
+	for _, p := range projects {
+		projectId := p.ID
+		usersWhoDeployedProject := []string{}
+
+		resource, err := o.client.Events.Get(events.EventsQuery{
+			EventCategories: []string{"DeploymentQueued"},
+			Projects: []string{projectId},
+			Skip:            0,
+			Take:            100,
+			From:			 from,
+		})
+	
+		if err != nil {
+			return o.errorHandler.HandleError(o.Id(), checks.Security, err)
+		}
+	
+		if resource != nil {
+			for _, r := range resource.Items {
+				if r.Username == "system" {
+					continue
 				}
-				continue
-			}
 
-			if slices.Index(projects, project.ID) != -1 {
-				continue
-			}
-
-			projects = append(projects, project.ID)
-
-			user, err := o.client.Users.Get(users.UsersQuery{
-				Filter: r.Username,
-				Skip:   0,
-				Take:   1,
-			})
-
-			if err != nil {
-				if !o.errorHandler.ShouldContinue(err) {
-					return nil, err
-				}
-				continue
-			}
-
-			usersWhoDeployedProject := []string{}
-			for _, u := range user.Items {
-				teams, err := o.getAdminTeams()
-
+				user, err := o.client.Users.Get(users.UsersQuery{
+					Filter: r.Username,
+					Skip:   0,
+					Take:   1,
+				})
+	
 				if err != nil {
 					if !o.errorHandler.ShouldContinue(err) {
 						return nil, err
 					}
 					continue
 				}
-
-				for _, t := range teams {
-					if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(usersWhoDeployedProject, u.Username) == -1 {
-						usersWhoDeployedProject = append(usersWhoDeployedProject, u.Username)
+	
+				for _, u := range user.Items {
+					for _, t := range teams {
+						if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(usersWhoDeployedProject, u.Username) == -1 {
+							usersWhoDeployedProject = append(usersWhoDeployedProject, u.Username)
+						}
 					}
 				}
 			}
-
-			result := project.Name + "(" + strings.Join(usersWhoDeployedProject, ",") + ")"
-			if slices.Index(projectsDeployedByAdmins, result) == -1 {
-				projectsDeployedByAdmins = append(projectsDeployedByAdmins, project.Name+" ("+strings.Join(usersWhoDeployedProject, ",")+")")
-			}
 		}
 
-		if len(projectsDeployedByAdmins) != 0 {
-			return checks.NewOctopusCheckResultImpl(
-				"The following projects were deployed by admins. Consider creating a limited user account to perform deployments: "+strings.Join(projectsDeployedByAdmins, ", "),
-				o.Id(),
-				"",
-				checks.Warning,
-				checks.Security), nil
+		if len(usersWhoDeployedProject) != 0 {
+			projectsDeployedByAdmins = append(projectsDeployedByAdmins, p.Name+" ("+strings.Join(usersWhoDeployedProject, ",")+")")
 		}
+	}
+
+	if len(projectsDeployedByAdmins) != 0 {
+		return checks.NewOctopusCheckResultImpl(
+			"The following projects were deployed by admins. Consider creating a limited user account to perform deployments: "+strings.Join(projectsDeployedByAdmins, ", "),
+			o.Id(),
+			"",
+			checks.Warning,
+			checks.Security), nil
 	}
 
 	return checks.NewOctopusCheckResultImpl(
@@ -119,15 +117,6 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 		"",
 		checks.Ok,
 		checks.Security), nil
-}
-
-func (o OctopusDeploymentQueuedByAdminCheck) getProjectFromRelatedDocs(event *events.Event) string {
-	for _, d := range event.RelatedDocumentIds {
-		if strings.HasPrefix(d, "Projects-") {
-			return d
-		}
-	}
-	return ""
 }
 
 func (o OctopusDeploymentQueuedByAdminCheck) getAdminTeams() ([]*teams.Team, error) {
