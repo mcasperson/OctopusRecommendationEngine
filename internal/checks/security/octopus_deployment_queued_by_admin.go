@@ -39,11 +39,9 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 	}
 
 	teams, err := o.getAdminTeams()
-	
+
 	if err != nil {
-		if !o.errorHandler.ShouldContinue(err) {
-			return nil, err
-		}
+		return o.errorHandler.HandleError(o.Id(), checks.Security, err)
 	}
 
 	projectsDeployedByAdmins := []string{}
@@ -58,16 +56,19 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 
 		resource, err := o.client.Events.Get(events.EventsQuery{
 			EventCategories: []string{"DeploymentQueued"},
-			Projects: []string{projectId},
+			Projects:        []string{projectId},
 			Skip:            0,
 			Take:            100,
-			From:			 from,
+			From:            from,
 		})
-	
+
 		if err != nil {
-			return o.errorHandler.HandleError(o.Id(), checks.Security, err)
+			if !o.errorHandler.ShouldContinue(err) {
+				return nil, err
+			}
+			continue
 		}
-	
+
 		if resource != nil {
 			for _, r := range resource.Items {
 				if r.Username == "system" {
@@ -79,14 +80,14 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 					Skip:   0,
 					Take:   1,
 				})
-	
+
 				if err != nil {
 					if !o.errorHandler.ShouldContinue(err) {
 						return nil, err
 					}
 					continue
 				}
-	
+
 				for _, u := range user.Items {
 					for _, t := range teams {
 						if slices.Index(t.MemberUserIDs, u.ID) != -1 && slices.Index(usersWhoDeployedProject, u.Username) == -1 {
