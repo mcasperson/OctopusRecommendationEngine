@@ -7,14 +7,14 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 ## Support
 
 This tool is **not** supported by Octopus. Feel free to report
-an [issue](https://github.com/mcasperson/OctopusRecommendationEngine/issues).
+an [issue](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/issues).
 
 This tool is also in an alpha state. We expect to add more checks and tweak the code before things stabalize.
 
 ## Usage
 
 Download the latest binary from
-the [releases](https://github.com/mcasperson/OctopusRecommendationEngine/releases/latest).
+the [releases](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/releases).
 
 ```
 ./octolint \
