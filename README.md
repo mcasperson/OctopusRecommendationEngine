@@ -6,10 +6,10 @@ This CLI tool scans an Octopus instance to find potential issues in the configur
 
 ## Support
 
-This tool is **not** supported by Octopus. Feel free to report
+Feel free to report
 an [issue](https://github.com/OctopusSalesEngineering/OctopusRecommendationEngine/issues).
 
-This tool is also in an alpha state. We expect to add more checks and tweak the code before things stabalize.
+This tool is not officially supported by Octopus. Please do not contact the Octopus support channels regarding octolint.
 
 ## Usage
 
