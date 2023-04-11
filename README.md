@@ -32,7 +32,10 @@ To create a read only account, deploy the Terraform module under the [serviceacc
 ```bash
 cd serviceaccount
 terraform init
-TF_VAR_octopus_server=https://yourinstance.octopus.app TF_VAR_octopus_apikey=API-apikeygoeshere TF_VAR_octopus_space_id=Spaces-# terraform apply
+TF_VAR_octopus_server=https://yourinstance.octopus.app \
+TF_VAR_octopus_apikey=API-apikeygoeshere \
+TF_VAR_octopus_space_id=Spaces-# \
+terraform apply
 ```
 
 This creates a user role, team, and service account all called `Octolint`. You can then create an API key for the service account, and use that API key with `octolint`. 
