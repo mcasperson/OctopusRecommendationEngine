@@ -30,11 +30,11 @@ the [releases](https://github.com/OctopusSalesEngineering/OctopusRecommendationE
 To create a read only account, deploy the Terraform module under the [serviceaccount](serviceaccount) directory:
 
 ```bash
+export TF_VAR_octopus_server=https://yourinstance.octopus.app
+export TF_VAR_octopus_apikey=API-apikeygoeshere
+export TF_VAR_octopus_space_id=Spaces-#
 cd serviceaccount
 terraform init
-TF_VAR_octopus_server=https://yourinstance.octopus.app \
-TF_VAR_octopus_apikey=API-apikeygoeshere \
-TF_VAR_octopus_space_id=Spaces-# \
 terraform apply
 ```
 
