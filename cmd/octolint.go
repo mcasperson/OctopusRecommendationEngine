@@ -24,7 +24,7 @@ func main() {
 	}
 
 	if apiKey == "" {
-		errorExit("You must specify the URL with the -apiKey argument")
+		errorExit("You must specify the API key with the -apiKey argument")
 	}
 
 	client, err := octoclient.CreateClient(url, space, apiKey)
