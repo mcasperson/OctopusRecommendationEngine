@@ -17,7 +17,16 @@ func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 
-	url, space, apiKey := parseUrl()
+	url, space, apiKey := parseArgs()
+
+	if url == "" {
+		errorExit("You must specify the URL with the -url argument")
+	}
+
+	if apiKey == "" {
+		errorExit("You must specify the URL with the -apiKey argument")
+	}
+
 	client, err := octoclient.CreateClient(url, space, apiKey)
 
 	if err != nil {
@@ -57,7 +66,7 @@ func errorExit(message string) {
 	os.Exit(1)
 }
 
-func parseUrl() (string, string, string) {
+func parseArgs() (string, string, string) {
 	var url string
 	flag.StringVar(&url, "url", "", "The Octopus URL e.g. https://myinstance.octopus.app")
 
@@ -68,6 +77,14 @@ func parseUrl() (string, string, string) {
 	flag.StringVar(&apiKey, "apiKey", "", "The Octopus api key")
 
 	flag.Parse()
+
+	if url == "" {
+		url = os.Getenv("OCTOPUS_CLI_SERVER")
+	}
+
+	if apiKey == "" {
+		apiKey = os.Getenv("OCTOPUS_CLI_API_KEY")
+	}
 
 	return url, space, apiKey
 }
