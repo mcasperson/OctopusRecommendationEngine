@@ -25,7 +25,7 @@ func (o OctopusClientPermissiveErrorHandler) HandleError(id string, group string
 
 // ShouldContinue is used to determine if an error was a permissions error. Things like 404s are also treated
 // as permission errors (we saw this a lot trying to get deployment processes). Interestingly we also saw a lot of
-// StatusCode's with 0, so this function also reads the error to work out what is going on.
+// StatusCode's set to 0, so this function also reads the error to work out what is going on.
 func (o OctopusClientPermissiveErrorHandler) ShouldContinue(err error) bool {
 	apiError, ok := err.(*core.APIError)
 	if ok {
@@ -33,6 +33,7 @@ func (o OctopusClientPermissiveErrorHandler) ShouldContinue(err error) bool {
 			apiError.StatusCode == http.StatusForbidden ||
 			apiError.StatusCode == http.StatusNotFound ||
 			strings.Index(strings.ToLower(apiError.ErrorMessage), "you do not have permission") != -1 ||
+			strings.Index(strings.ToLower(apiError.ErrorMessage), "invalid username or password") != -1 ||
 			strings.Index(strings.ToLower(apiError.ErrorMessage), "support for password authentication was removed") != -1
 	}
 	return true
