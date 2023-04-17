@@ -79,7 +79,7 @@ jobs:
           OCTOTESTDEFAULTSPACEID: Spaces-2
           TEST_GIT_REPO: ${{ secrets.TEST_GIT_REPO }}
           TEST_GIT_PASSWORD: ${{ secrets.TEST_GIT_PASSWORD }}
-          TEST_GIT_USERNAME: ${{ secrets.TEST_GIT_USERNAME }}
+          TEST_GIT_USERNAME: ${{ secrets.GIT_CREDENTIAL }}
       - if: always()
         name: Report
         uses: dorny/test-reporter@v1
