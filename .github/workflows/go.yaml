@@ -78,7 +78,7 @@ jobs:
           OCTOTESTDUMPSTATE: !!str true
           OCTOTESTDEFAULTSPACEID: Spaces-2
           TEST_GIT_REPO: ${{ secrets.TEST_GIT_REPO }}
-          TEST_GIT_PASSWORD: ${{ secrets.TEST_GIT_PASSWORD }}
+          TEST_GIT_PASSWORD: ${{ secrets.GIT_CREDENTIAL }}
           TEST_GIT_USERNAME: ${{ secrets.TEST_GIT_USERNAME }}
       - if: always()
         name: Report
