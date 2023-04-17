@@ -6,13 +6,15 @@ require (
 	github.com/OctopusDeploy/go-octopusdeploy/v2 v2.21.0
 	github.com/avast/retry-go/v4 v4.3.3
 	github.com/briandowns/spinner v1.22.0
-	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230315195304-bc8c89cbd07a
+	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230417081345-fe8c660438ba
 	golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
 )
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
+	github.com/bahlo/generic-list-go v0.2.0 // indirect
+	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/containerd/containerd v1.6.19 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -33,6 +35,7 @@ require (
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.2 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/moby/patternmatcher v0.5.0 // indirect
@@ -47,6 +50,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.8.2 // indirect
 	github.com/testcontainers/testcontainers-go v0.18.0 // indirect
+	github.com/wk8/go-ordered-map/v2 v2.1.7 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
