@@ -47,7 +47,7 @@ func main() {
 	client, err := octoclient.CreateClient(url, space, apiKey)
 
 	if err != nil {
-		errorExit("Failed to create the Octopus client")
+		errorExit("Failed to create the Octopus client. Check that the url, api key, and space are correct.")
 	}
 
 	factory := factory.NewOctopusCheckFactory(client)
