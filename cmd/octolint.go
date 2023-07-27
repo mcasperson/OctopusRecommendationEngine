@@ -59,7 +59,7 @@ func main() {
 
 	executor := executor.NewOctopusCheckExecutor()
 	results, err := executor.ExecuteChecks(checkCollection, func(check checks.OctopusCheck, err error) error {
-		fmt.Println("Failed to execute check " + check.Id() + ": " + err.Error())
+		_, err = fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id()+": "+err.Error())
 		return nil
 	})
 
