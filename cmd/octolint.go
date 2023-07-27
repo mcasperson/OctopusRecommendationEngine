@@ -24,7 +24,7 @@ func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 
-	url, space, apiKey := parseArgs()
+	url, space, apiKey, skipTests := parseArgs()
 
 	if url == "" {
 		errorExit("You must specify the URL with the -url argument")
@@ -51,7 +51,7 @@ func main() {
 	}
 
 	factory := factory.NewOctopusCheckFactory(client)
-	checkCollection, err := factory.BuildAllChecks()
+	checkCollection, err := factory.BuildAllChecks(skipTests)
 
 	if err != nil {
 		errorExit("Failed to create the checks")
@@ -83,7 +83,7 @@ func errorExit(message string) {
 	os.Exit(1)
 }
 
-func parseArgs() (string, string, string) {
+func parseArgs() (string, string, string, string) {
 	var url string
 	flag.StringVar(&url, "url", "", "The Octopus URL e.g. https://myinstance.octopus.app")
 
@@ -92,6 +92,9 @@ func parseArgs() (string, string, string) {
 
 	var apiKey string
 	flag.StringVar(&apiKey, "apiKey", "", "The Octopus api key")
+
+	var skipTests string
+	flag.StringVar(&skipTests, "skipTests", "", "A comma separated list of tests to skip")
 
 	flag.Parse()
 
@@ -103,7 +106,7 @@ func parseArgs() (string, string, string) {
 		apiKey = os.Getenv("OCTOPUS_CLI_API_KEY")
 	}
 
-	return url, space, apiKey
+	return url, space, apiKey, skipTests
 }
 
 func lookupSpaceAsName(octopusUrl string, spaceName string, apiKey string) (string, error) {
