@@ -112,5 +112,7 @@ func (o OctopusDuplicatedVariablesCheck) shouldIgnoreVariable(variable *variable
 		slices.Index(checks.SpecialVars, variable.Name) != -1 ||
 		strings.ToLower(variable.Value) == "true" ||
 		strings.ToLower(variable.Value) == "false" ||
+		strings.ToLower(variable.Value) == "yes" ||
+		strings.ToLower(variable.Value) == "no" ||
 		err == nil
 }
