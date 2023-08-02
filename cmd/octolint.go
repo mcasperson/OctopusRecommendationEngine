@@ -24,7 +24,7 @@ func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 
-	url, space, apiKey, skipTests := parseArgs()
+	url, space, apiKey, skipTests, verboseErrors := parseArgs()
 
 	if url == "" {
 		errorExit("You must specify the URL with the -url argument")
@@ -59,7 +59,14 @@ func main() {
 
 	executor := executor.NewOctopusCheckExecutor()
 	results, err := executor.ExecuteChecks(checkCollection, func(check checks.OctopusCheck, err error) error {
-		_, err = fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id()+": "+err.Error())
+		fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id())
+		if verboseErrors {
+			fmt.Fprintf(os.Stdout, "##octopus[stdout-verbose]")
+		}
+		fmt.Fprintf(os.Stderr, err.Error())
+		if verboseErrors {
+			fmt.Fprintf(os.Stdout, "##octopus[stdout-default]")
+		}
 		return nil
 	})
 
@@ -83,7 +90,7 @@ func errorExit(message string) {
 	os.Exit(1)
 }
 
-func parseArgs() (string, string, string, string) {
+func parseArgs() (string, string, string, string, bool) {
 	var url string
 	flag.StringVar(&url, "url", "", "The Octopus URL e.g. https://myinstance.octopus.app")
 
@@ -96,6 +103,9 @@ func parseArgs() (string, string, string, string) {
 	var skipTests string
 	flag.StringVar(&skipTests, "skipTests", "", "A comma separated list of tests to skip")
 
+	var verboseErrors bool
+	flag.BoolVar(&verboseErrors, "verboseErrors", false, "Print error details as verbose logs inOctopus")
+
 	flag.Parse()
 
 	if url == "" {
@@ -106,7 +116,7 @@ func parseArgs() (string, string, string, string) {
 		apiKey = os.Getenv("OCTOPUS_CLI_API_KEY")
 	}
 
-	return url, space, apiKey, skipTests
+	return url, space, apiKey, skipTests, verboseErrors
 }
 
 func lookupSpaceAsName(octopusUrl string, spaceName string, apiKey string) (string, error) {
