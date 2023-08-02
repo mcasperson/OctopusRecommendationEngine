@@ -7,6 +7,7 @@ require (
 	github.com/avast/retry-go/v4 v4.3.3
 	github.com/briandowns/spinner v1.22.0
 	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230417021236-60777d52506c
+	github.com/samber/lo v1.38.1
 	golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
 )
 
@@ -44,7 +45,6 @@ require (
 	github.com/opencontainers/runc v1.1.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/samber/lo v1.38.1 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/testify v1.8.2 // indirect
 	github.com/testcontainers/testcontainers-go v0.18.0 // indirect
