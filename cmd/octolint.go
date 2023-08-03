@@ -61,9 +61,9 @@ func main() {
 	results, err := executor.ExecuteChecks(checkCollection, func(check checks.OctopusCheck, err error) error {
 		fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id())
 		if verboseErrors {
-			fmt.Fprintf(os.Stdout, "##octopus[stdout-verbose]")
-			fmt.Fprintf(os.Stdout, err.Error())
-			fmt.Fprintf(os.Stdout, "##octopus[stdout-default]")
+			fmt.Println("##octopus[stdout-verbose]")
+			fmt.Fprintf(os.Stdout, err.Error()+"\n")
+			fmt.Println("##octopus[stdout-default]")
 		} else {
 			fmt.Fprintf(os.Stderr, err.Error())
 		}
