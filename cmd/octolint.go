@@ -62,10 +62,10 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id())
 		if verboseErrors {
 			fmt.Println("##octopus[stdout-verbose]")
-			fmt.Fprintf(os.Stdout, err.Error()+"\n")
+			fmt.Println(err.Error())
 			fmt.Println("##octopus[stdout-default]")
 		} else {
-			fmt.Fprintf(os.Stderr, err.Error())
+			fmt.Fprintf(os.Stderr, err.Error()+"\n")
 		}
 		return nil
 	})
