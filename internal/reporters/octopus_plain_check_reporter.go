@@ -26,7 +26,6 @@ func (o OctopusPlainCheckReporter) Generate(results []checks.OctopusCheckResult)
 			report = append(report, "========================================================================================================================")
 			report = append(report, r.Code())
 			report = append(report, r.Description())
-			report = append(report, "========================================================================================================================")
 		}
 	}
 
