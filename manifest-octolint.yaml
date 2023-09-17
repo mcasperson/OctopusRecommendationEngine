@@ -1,4 +1,4 @@
-image: octopussamples/octolint
+image: octopussamples/octolint:latest
 manifests:
   -
     image: octopussamples/octolint-linux:latest
