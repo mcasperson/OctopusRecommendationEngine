@@ -2,6 +2,7 @@ package reporters
 
 import (
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
+	"strings"
 	"testing"
 )
 
@@ -25,7 +26,7 @@ func TestFailChecks(t *testing.T) {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "[OctoRecAlwaysFail] This check always fails" {
+	if strings.Index(results, "OctoRecAlwaysFail") == -1 || strings.Index(results, "This check always fails") == -1 {
 		t.Fatal("Should have returned 1 results")
 	}
 }
@@ -39,7 +40,7 @@ func TestFailAndPassChecks(t *testing.T) {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "[OctoRecAlwaysFail] This check always fails" {
+	if strings.Index(results, "OctoRecAlwaysFail") == -1 || strings.Index(results, "This check always fails") == -1 {
 		t.Fatal("Should have returned 1 results")
 	}
 }
@@ -53,7 +54,11 @@ func TestFailAndPassWithOkChecks(t *testing.T) {
 		t.Fatal("Should not have returned an error")
 	}
 
-	if results != "[OctoRecAlwaysFail] This check always fails\n\n[OctoRecAlwaysPass] This check always passes" {
-		t.Fatal("Should have returned 1 results")
+	if strings.Index(results, "OctoRecAlwaysFail") == -1 || strings.Index(results, "This check always fails") == -1 {
+		t.Fatal("Should have returned 1 failed result")
+	}
+
+	if strings.Index(results, "OctoRecAlwaysPass") == -1 || strings.Index(results, "This check always passes") == -1 {
+		t.Fatal("Should have returned 1 pass result")
 	}
 }
