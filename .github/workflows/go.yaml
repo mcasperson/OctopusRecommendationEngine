@@ -201,6 +201,16 @@ jobs:
         run: |
           docker build --platform windows/amd64 . -f Dockerfile.windows -t octopussamples/octolint-windows:${{ steps.determine_version.outputs.semVer }}
           docker push octopussamples/octolint-windows:${{ steps.determine_version.outputs.semVer }}
+  multiarch-image:
+    needs: [ build-windows, build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create manifest
+        run: >
+          docker run -v $PWD:/build mplatform/manifest-tool 
+          --username=${{ secrets.DOCKERHUB_USERNAME }} 
+          --password=${{ secrets.DOCKERHUB_TOKEN }} 
+          push from-spec /build/manifest-octolint.yaml
 permissions:
   id-token: write
   checks: write
