@@ -1,0 +1,7 @@
+# Create the execution image
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2019
+
+COPY ./octolint_windows_amd64.exe C:/octolint_windows_amd64.exe
+
+# Run
+ENTRYPOINT ["C:/octolint_windows_amd64.exe"]
