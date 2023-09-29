@@ -1,15 +1,22 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/resources"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/spaces"
 	"github.com/briandowns/spinner"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks/factory"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/executor"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/reporters"
 	"github.com/mcasperson/OctopusTerraformTestFramework/octoclient"
+	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -17,7 +24,7 @@ func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
 
-	url, space, apiKey := parseArgs()
+	url, space, apiKey, skipTests, verboseErrors := parseArgs()
 
 	if url == "" {
 		errorExit("You must specify the URL with the -url argument")
@@ -27,10 +34,20 @@ func main() {
 		errorExit("You must specify the API key with the -apiKey argument")
 	}
 
+	if !strings.HasPrefix(space, "Spaces-") {
+		spaceId, err := lookupSpaceAsName(url, space, apiKey)
+
+		if err != nil {
+			errorExit("Failed to create the Octopus client")
+		}
+
+		space = spaceId
+	}
+
 	client, err := octoclient.CreateClient(url, space, apiKey)
 
 	if err != nil {
-		errorExit("Failed to create the Octopus client")
+		errorExit("Failed to create the Octopus client. Check that the url, api key, and space are correct.")
 	}
 
 	factory := factory.NewOctopusCheckFactory(client, url, space)
@@ -42,7 +59,14 @@ func main() {
 
 	executor := executor.NewOctopusCheckExecutor()
 	results, err := executor.ExecuteChecks(checkCollection, func(check checks.OctopusCheck, err error) error {
-		fmt.Println("Failed to execute check " + check.Id() + ": " + err.Error())
+		fmt.Fprintf(os.Stderr, "Failed to execute check "+check.Id())
+		if verboseErrors {
+			fmt.Println("##octopus[stdout-verbose]")
+			fmt.Println(err.Error())
+			fmt.Println("##octopus[stdout-default]")
+		} else {
+			fmt.Fprintf(os.Stderr, err.Error()+"\n")
+		}
 		return nil
 	})
 
@@ -66,7 +90,7 @@ func errorExit(message string) {
 	os.Exit(1)
 }
 
-func parseArgs() (string, string, string) {
+func parseArgs() (string, string, string, string, bool) {
 	var url string
 	flag.StringVar(&url, "url", "", "The Octopus URL e.g. https://myinstance.octopus.app")
 
@@ -75,6 +99,12 @@ func parseArgs() (string, string, string) {
 
 	var apiKey string
 	flag.StringVar(&apiKey, "apiKey", "", "The Octopus api key")
+
+	var skipTests string
+	flag.StringVar(&skipTests, "skipTests", "", "A comma separated list of tests to skip")
+
+	var verboseErrors bool
+	flag.BoolVar(&verboseErrors, "verboseErrors", false, "Print error details as verbose logs inOctopus")
 
 	flag.Parse()
 
@@ -86,5 +116,49 @@ func parseArgs() (string, string, string) {
 		apiKey = os.Getenv("OCTOPUS_CLI_API_KEY")
 	}
 
-	return url, space, apiKey
+	return url, space, apiKey, skipTests, verboseErrors
+}
+
+func lookupSpaceAsName(octopusUrl string, spaceName string, apiKey string) (string, error) {
+	if len(strings.TrimSpace(spaceName)) == 0 {
+		return "", errors.New("space can not be empty")
+	}
+
+	requestURL := fmt.Sprintf("%s/api/Spaces?take=1000&partialName=%s", octopusUrl, url.QueryEscape(spaceName))
+
+	req, err := http.NewRequest(http.MethodGet, requestURL, nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	if apiKey != "" {
+		req.Header.Set("X-Octopus-ApiKey", apiKey)
+	}
+
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return "", err
+	}
+
+	if res.StatusCode != 200 {
+		return "", nil
+	}
+	defer res.Body.Close()
+
+	collection := resources.Resources[spaces.Space]{}
+	err = json.NewDecoder(res.Body).Decode(&collection)
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, space := range collection.Items {
+		if space.Name == spaceName {
+			return space.ID, nil
+		}
+	}
+
+	return "", errors.New("did not find space with name " + spaceName)
 }

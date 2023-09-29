@@ -17,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.17
+          go-version: 1.20.5
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.15
         with:
@@ -42,14 +42,14 @@ jobs:
         with:
           name: Dependencies
           path: dependencies.txt
-      - name: List Dependency Updates
-        run: go list -u -m -f "{{if .Update}}{{.}}{{end}}" all > dependencyUpdates.txt
-        shell: bash
-      - name: Collect Dependency Updates
-        uses: actions/upload-artifact@v2
-        with:
-          name: Dependencies Updates
-          path: dependencyUpdates.txt
+#      - name: List Dependency Updates
+#        run: go list -u -m -f "{{if .Update}}{{.}}{{end}}" all > dependencyUpdates.txt
+#        shell: bash
+#      - name: Collect Dependency Updates
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Dependencies Updates
+#          path: dependencyUpdates.txt
       - name: Clone the Terraform provider source
         run: git clone https://github.com/OctopusDeployLabs/terraform-provider-octopusdeploy.git
         shell: bash
@@ -78,7 +78,7 @@ jobs:
           OCTOTESTDUMPSTATE: !!str true
           OCTOTESTDEFAULTSPACEID: Spaces-2
           TEST_GIT_REPO: ${{ secrets.TEST_GIT_REPO }}
-          TEST_GIT_PASSWORD: ${{ secrets.TEST_GIT_PASSWORD }}
+          TEST_GIT_PASSWORD: ${{ secrets.GIT_CREDENTIAL }}
           TEST_GIT_USERNAME: ${{ secrets.TEST_GIT_USERNAME }}
       - if: always()
         name: Report
@@ -137,6 +137,81 @@ jobs:
           asset_path: octolint_macos_arm64
           asset_name: octolint_macos_arm64
           asset_content_type: application/octet-stream
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push latest
+        if: ${{ steps.branch-name.outputs.current_branch == 'main' }}
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: octopussamples/octolint-linux:latest
+      - name: Build and push versioned image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: octopussamples/octolint-linux:${{ steps.determine_version.outputs.semVer }}
+  build-windows:
+    runs-on: windows-2019
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.20.5 # 1.20.6 breaks the tests: https://github.com/golang/go/issues/61431
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v7
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: 5.x
+      - id: determine_version
+        name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0.9.15
+        with:
+          additionalArguments: /overrideconfig mode=Mainline
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: go build -o octolint_windows_amd64.exe cmd/octolint.go
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: 0
+      - name: Build and push latest
+        if: ${{ steps.branch-name.outputs.current_branch == 'main' }}
+        run: |
+          docker build --platform windows/amd64 . -f Dockerfile.windows -t octopussamples/octolint-windows:latest
+          docker push octopussamples/octolint-windows:latest
+      - name: Build and push
+        if: ${{ steps.branch-name.outputs.current_branch == 'main' }}
+        run: |
+          docker build --platform windows/amd64 . -f Dockerfile.windows -t octopussamples/octolint-windows:${{ steps.determine_version.outputs.semVer }}
+          docker push octopussamples/octolint-windows:${{ steps.determine_version.outputs.semVer }}
+  multiarch-image:
+    needs: [ build-windows, build ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create manifest
+        run: >
+          docker run -v $PWD:/build mplatform/manifest-tool 
+          --username=${{ secrets.DOCKERHUB_USERNAME }} 
+          --password=${{ secrets.DOCKERHUB_TOKEN }} 
+          push from-spec /build/manifest-octolint.yaml
 permissions:
   id-token: write
   checks: write

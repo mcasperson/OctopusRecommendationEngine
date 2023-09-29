@@ -1,0 +1,12 @@
+image: octopussamples/octolint:latest
+manifests:
+  -
+    image: octopussamples/octolint-linux:latest
+    platform:
+      architecture: amd64
+      os: linux
+  -
+    image: octopussamples/octolint-windows:latest
+    platform:
+      architecture: amd64
+      os: windows

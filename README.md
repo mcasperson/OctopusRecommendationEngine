@@ -23,6 +23,15 @@ the [releases](https://github.com/OctopusSalesEngineering/OctopusRecommendationE
     -space Spaces-1234
 ```
 
+Octolint is also distributed as a Docker image:
+
+```
+docker run --rm octopussamples/octolint \
+    -url https://yourinstance.octopus.app \
+    -apiKey API-YOURAPIKEY \
+    -space Spaces-1
+```
+
 ## Permissions
 
 `octolint` only requires read access - it does not modify anything on the server.
