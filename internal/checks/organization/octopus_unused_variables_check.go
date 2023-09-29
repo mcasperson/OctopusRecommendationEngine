@@ -78,7 +78,7 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following variables are unused: \n"+strings.Join(messages, "\n"),
+			"The following variables may be unused (note there are edge cases octolint can't detect, so double check these before deleting them): \n"+strings.Join(messages, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,
