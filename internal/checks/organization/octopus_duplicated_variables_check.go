@@ -86,11 +86,11 @@ func (o OctopusDuplicatedVariablesCheck) Execute() (checks.OctopusCheckResult, e
 	if len(duplicateVars) > 0 {
 		messages := []string{}
 		for _, variable := range duplicateVars {
-			messages = append(messages, variable.project1.Name+"/"+variable.variable1.Name+" == "+variable.project2.Name+"/"+variable.variable2.Name)
+			messages = append(messages, variable.project1.Name+"/"+variable.variable1.Name+" == "+variable.project2.Name+": "+variable.variable2.Name)
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following variables are duplicated between projects. Consider moving these into library variable sets: "+strings.Join(messages, ", "),
+			"The following variables are duplicated between projects. Consider moving these into library variable sets:\n"+strings.Join(messages, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

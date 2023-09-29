@@ -9,7 +9,7 @@ import (
 )
 
 type OctopusLifecycleRetentionPolicyCheck struct {
-	client *client.Client
+	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler
 }
 
@@ -52,7 +52,7 @@ func (o OctopusLifecycleRetentionPolicyCheck) Execute() (checks.OctopusCheckResu
 
 	if len(keepsForever) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following lifecycles have retention policies that keep releases or files forever: "+strings.Join(keepsForever, ", "),
+			"The following lifecycles have retention policies that keep releases or files forever:\n"+strings.Join(keepsForever, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

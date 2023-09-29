@@ -84,7 +84,7 @@ func (o OctopusDuplicatedGitCredentialsCheck) Execute() (checks.OctopusCheckResu
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following Git usernames have been reused across the following projects: "+strings.Join(message, ", "),
+			"The following Git usernames have been reused across the following projects:\n"+strings.Join(message, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

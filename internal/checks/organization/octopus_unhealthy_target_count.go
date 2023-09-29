@@ -68,7 +68,7 @@ func (o OctopusUnhealthyTargetCheck) Execute() (checks.OctopusCheckResult, error
 
 	if len(unhealthyMachines) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following targets have not been healthy in the last 30 days: "+strings.Join(unhealthyMachines, ", "),
+			"The following targets have not been healthy in the last 30 days:\n"+strings.Join(unhealthyMachines, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

@@ -95,7 +95,7 @@ func (o OctopusTenantsInsteadOfTagsCheck) Execute() (checks.OctopusCheckResult, 
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following groups of tenants have been directly referenced more than once, and may be better grouped as tenant tags: "+strings.Join(groupedTenants, "; "),
+			"The following groups of tenants have been directly referenced more than once, and may be better grouped as tenant tags:\n"+strings.Join(groupedTenants, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

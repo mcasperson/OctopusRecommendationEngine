@@ -72,13 +72,13 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		for p, variables := range unusedVars {
 			if len(variables) != 0 {
 				for _, variable := range variables {
-					messages = append(messages, p.Name+"/"+variable.Name)
+					messages = append(messages, p.Name+": "+variable.Name)
 				}
 			}
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following variables are unused: "+strings.Join(messages, ", "),
+			"The following variables are unused: \n"+strings.Join(messages, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

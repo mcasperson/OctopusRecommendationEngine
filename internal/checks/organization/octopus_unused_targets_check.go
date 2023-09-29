@@ -70,7 +70,7 @@ func (o OctopusUnusedTargetsCheck) Execute() (checks.OctopusCheckResult, error) 
 
 	if len(unusedMachines) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following targets have not performed a deployment in 30 days: "+strings.Join(unusedMachines, ", "),
+			"The following targets have not performed a deployment in 30 days:\n"+strings.Join(unusedMachines, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

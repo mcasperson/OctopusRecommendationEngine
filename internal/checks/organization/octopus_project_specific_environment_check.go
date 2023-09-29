@@ -121,7 +121,7 @@ func (o OctopusProjectSpecificEnvironmentCheck) Execute() (checks.OctopusCheckRe
 		}
 
 		return checks.NewOctopusCheckResultImpl(
-			"The following environments are used by a single project: "+strings.Join(messages, ", "),
+			"The following environments are used by a single project:\n"+strings.Join(messages, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

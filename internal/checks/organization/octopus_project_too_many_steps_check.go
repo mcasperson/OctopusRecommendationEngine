@@ -53,7 +53,7 @@ func (o OctopusProjectTooManyStepsCheck) Execute() (checks.OctopusCheckResult, e
 
 	if len(complexProjects) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following projects have 20 or more steps: "+strings.Join(complexProjects, ", "),
+			"The following projects have 20 or more steps:\n"+strings.Join(complexProjects, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

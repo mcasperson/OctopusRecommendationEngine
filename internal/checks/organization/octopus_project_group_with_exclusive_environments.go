@@ -85,7 +85,7 @@ func (o OctopusProjectGroupsWithExclusiveEnvironmentsCheck) Execute() (checks.Oc
 
 	if len(projectGroupsWithExclusiveEnvs) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following project groups contain projects with mutually exclusive environments in their default lifecycle: "+strings.Join(projectGroupsWithExclusiveEnvs, ", "),
+			"The following project groups contain projects with mutually exclusive environments in their default lifecycle:\n"+strings.Join(projectGroupsWithExclusiveEnvs, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

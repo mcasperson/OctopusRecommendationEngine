@@ -105,7 +105,7 @@ func (o OctopusDeploymentQueuedByAdminCheck) Execute() (checks.OctopusCheckResul
 
 	if len(projectsDeployedByAdmins) != 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following projects were deployed by admins. Consider creating a limited user account to perform deployments: "+strings.Join(projectsDeployedByAdmins, ", "),
+			"The following projects were deployed by admins. Consider creating a limited user account to perform deployments:\n"+strings.Join(projectsDeployedByAdmins, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

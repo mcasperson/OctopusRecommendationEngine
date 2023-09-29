@@ -69,7 +69,7 @@ func (o OctopusPerpetualApiKeysCheck) Execute() (checks.OctopusCheckResult, erro
 
 	if len(perpetualApiKeys) != 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following API keys do not expire: "+strings.Join(perpetualApiKeys, ", "),
+			"The following API keys do not expire:\n"+strings.Join(perpetualApiKeys, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,

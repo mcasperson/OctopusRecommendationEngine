@@ -53,7 +53,7 @@ func (o OctopusEmptyProjectCheck) Execute() (checks.OctopusCheckResult, error) {
 
 	if len(emptyProjects) > 0 {
 		return checks.NewOctopusCheckResultImpl(
-			"The following projects have no runbooks and no deployment process: "+strings.Join(emptyProjects, ", "),
+			"The following projects have no runbooks and no deployment process:\n"+strings.Join(emptyProjects, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,
