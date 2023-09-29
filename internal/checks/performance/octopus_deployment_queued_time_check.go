@@ -85,8 +85,8 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 
 	if len(deployments) >= maxQueuedTasks {
 		return checks.NewOctopusCheckResultImpl(
-			fmt.Sprint("Found "+fmt.Sprint(len(deployments)))+" deployments that were queued for longer than "+fmt.Sprintln(maxQueueTimeMinutes)+" minutes. Consider increasing the task cap or adding a HA node to reduce task queue times: "+
-				strings.Join(deploymentLinks, ", "),
+			fmt.Sprint("Found "+fmt.Sprint(len(deployments)))+" deployments that were queued for longer than "+fmt.Sprint(maxQueueTimeMinutes)+" minutes. Consider increasing the task cap or adding a HA node to reduce task queue times:\n"+
+				strings.Join(deploymentLinks, "\n"),
 			o.Id(),
 			"",
 			checks.Warning,
@@ -94,7 +94,7 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 	}
 
 	return checks.NewOctopusCheckResultImpl(
-		"Found "+fmt.Sprint(len(deployments))+" deployment tasks that were queued for longer than "+fmt.Sprintln(maxQueueTimeMinutes)+" minutes: "+
+		"Found "+fmt.Sprint(len(deployments))+" deployment tasks that were queued for longer than "+fmt.Sprint(maxQueueTimeMinutes)+" minutes:\n"+
 			strings.Join(deploymentLinks, ", "),
 		o.Id(),
 		"",
