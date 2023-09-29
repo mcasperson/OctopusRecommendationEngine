@@ -7,6 +7,7 @@ require (
 	github.com/avast/retry-go/v4 v4.3.3
 	github.com/briandowns/spinner v1.22.0
 	github.com/mcasperson/OctopusTerraformTestFramework v0.0.0-20230417021236-60777d52506c
+	github.com/samber/lo v1.38.1
 	golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
 )
 

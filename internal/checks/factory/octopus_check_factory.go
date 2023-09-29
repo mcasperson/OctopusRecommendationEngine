@@ -12,10 +12,12 @@ import (
 type OctopusCheckFactory struct {
 	client       *client.Client
 	errorHandler checks.OctopusClientErrorHandler
+	url          string
+	space        string
 }
 
-func NewOctopusCheckFactory(client *client.Client) OctopusCheckFactory {
-	return OctopusCheckFactory{client: client, errorHandler: checks.OctopusClientPermissiveErrorHandler{}}
+func NewOctopusCheckFactory(client *client.Client, url string, space string) OctopusCheckFactory {
+	return OctopusCheckFactory{client: client, url: url, space: space, errorHandler: checks.OctopusClientPermissiveErrorHandler{}}
 }
 
 // BuildAllChecks creates new instances of all the checks and returns them as an array.
@@ -36,6 +38,6 @@ func (o OctopusCheckFactory) BuildAllChecks() ([]checks.OctopusCheck, error) {
 		security.NewOctopusDeploymentQueuedByAdminCheck(o.client, o.errorHandler),
 		security.NewOctopusPerpetualApiKeysCheck(o.client, o.errorHandler),
 		security.NewOctopusDuplicatedGitCredentialsCheck(o.client, o.errorHandler),
-		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.errorHandler),
+		performance.NewOctopusDeploymentQueuedTimeCheck(o.client, o.url, o.space, o.errorHandler),
 	}, nil
 }

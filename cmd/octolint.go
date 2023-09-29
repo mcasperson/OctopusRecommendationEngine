@@ -33,7 +33,7 @@ func main() {
 		errorExit("Failed to create the Octopus client")
 	}
 
-	factory := factory.NewOctopusCheckFactory(client)
+	factory := factory.NewOctopusCheckFactory(client, url, space)
 	checkCollection, err := factory.BuildAllChecks()
 
 	if err != nil {
