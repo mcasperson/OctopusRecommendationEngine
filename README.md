@@ -26,7 +26,7 @@ the [releases](https://github.com/OctopusSalesEngineering/OctopusRecommendationE
 Octolint is also distributed as a Docker image:
 
 ```
-docker run --rm octopussamples/octolint \
+docker run -t --rm octopussamples/octolint \
     -url https://yourinstance.octopus.app \
     -apiKey API-YOURAPIKEY \
     -space Spaces-1
