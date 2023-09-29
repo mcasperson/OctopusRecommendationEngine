@@ -58,6 +58,11 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 				continue
 			}
 
+			// Ignore variables that look like JSON substitutions
+			if strings.Index(v.Name, ":") != -1 {
+				continue
+			}
+
 			if !(o.naiveStepVariableScan(deploymentProcess, v) || o.naiveVariableSetVariableScan(variableSet, v)) {
 				if _, ok := unusedVars[p]; !ok {
 					unusedVars[p] = []*variables.Variable{}

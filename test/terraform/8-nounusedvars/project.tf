@@ -54,6 +54,25 @@ resource "octopusdeploy_project" "deploy_frontend_project" {
   }
 }
 
+resource "octopusdeploy_variable" "jsonvariable" {
+  owner_id     = "${octopusdeploy_project.deploy_frontend_project.id}"
+  value        = "Whatever"
+  name         = "propert1:property2:0"
+  type         = "String"
+  description  = ""
+  is_sensitive = false
+
+  scope {
+    actions      = []
+    channels     = []
+    environments = []
+    machines     = []
+    roles        = null
+    tenant_tags  = null
+  }
+  depends_on = []
+}
+
 resource "octopusdeploy_variable" "variablea" {
   owner_id     = "${octopusdeploy_project.deploy_frontend_project.id}"
   value        = "Whatever"
