@@ -1747,7 +1747,7 @@ func TestLongTaskQueue(t *testing.T) {
 
 	// Act
 	newSpaceClient, err := octoclient.CreateClient(server.URL, "Spaces-1", test.ApiKey)
-	check := NewOctopusDeploymentQueuedTimeCheck(newSpaceClient, checks.OctopusClientPermissiveErrorHandler{})
+	check := NewOctopusDeploymentQueuedTimeCheck(newSpaceClient, "http://test.app", "Spaces-1", checks.OctopusClientPermissiveErrorHandler{})
 
 	result, err := check.Execute()
 

@@ -51,7 +51,7 @@ func main() {
 	}
 
 	factory := factory.NewOctopusCheckFactory(client, url, space)
-	checkCollection, err := factory.BuildAllChecks()
+	checkCollection, err := factory.BuildAllChecks(skipTests)
 
 	if err != nil {
 		errorExit("Failed to create the checks")
