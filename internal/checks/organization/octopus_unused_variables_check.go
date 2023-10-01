@@ -4,12 +4,18 @@ import (
 	"errors"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/client"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/deployments"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/newclient"
 	projects2 "github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/projects"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/resources"
+	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/runbooks"
 	"github.com/OctopusDeploy/go-octopusdeploy/v2/pkg/variables"
 	"github.com/mcasperson/OctopusRecommendationEngine/internal/checks"
 	"golang.org/x/exp/slices"
+	"regexp"
 	"strings"
 )
+
+var linkOptions = regexp.MustCompile(`\{.*?}`)
 
 // OctopusUnusedVariablesCheck checks to see if any project variables are unused.
 type OctopusUnusedVariablesCheck struct {
@@ -38,16 +44,14 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 
 	unusedVars := map[*projects2.Project][]*variables.Variable{}
 	for _, p := range projects {
-		deploymentProcess, err := o.client.DeploymentProcesses.GetByID(p.DeploymentProcessID)
-
-		if err != nil {
-			if !o.errorHandler.ShouldContinue(err) {
-				return nil, err
-			}
-			continue
-		}
 
 		variableSet, err := o.client.Variables.GetAll(p.ID)
+
+		if err != nil {
+			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
+		}
+
+		deploymentSteps, err := o.getDeploymentSteps(p)
 
 		if err != nil {
 			return o.errorHandler.HandleError(o.Id(), checks.Organization, err)
@@ -63,7 +67,9 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 				continue
 			}
 
-			if !(o.naiveStepVariableScan(deploymentProcess, v) || o.naiveVariableSetVariableScan(variableSet, v)) {
+			used := o.naiveStepVariableScan(deploymentSteps, v) || o.naiveVariableSetVariableScan(variableSet, v)
+
+			if !used {
 				if _, ok := unusedVars[p]; !ok {
 					unusedVars[p] = []*variables.Variable{}
 				}
@@ -98,11 +104,49 @@ func (o OctopusUnusedVariablesCheck) Execute() (checks.OctopusCheckResult, error
 		checks.Organization), nil
 }
 
+func (o OctopusUnusedVariablesCheck) getDeploymentSteps(p *projects2.Project) ([]*deployments.DeploymentStep, error) {
+	deploymentProcesses := []*deployments.DeploymentStep{}
+	deploymentProcess, err := o.client.DeploymentProcesses.GetByID(p.DeploymentProcessID)
+
+	if err != nil {
+		if !o.errorHandler.ShouldContinue(err) {
+			return nil, err
+		}
+	}
+
+	deploymentProcesses = append(deploymentProcesses, deploymentProcess.Steps...)
+
+	if link, ok := p.Links["Runbooks"]; ok {
+		runbooks, err := newclient.Get[resources.Resources[runbooks.Runbook]](o.client.HttpSession(), linkOptions.ReplaceAllString(link, ""))
+
+		if err != nil {
+			if !o.errorHandler.ShouldContinue(err) {
+				return nil, err
+			}
+		}
+
+		for _, runbook := range runbooks.Items {
+			runbookProcess, err := o.client.RunbookProcesses.GetByID(runbook.RunbookProcessID)
+
+			if err != nil {
+				if !o.errorHandler.ShouldContinue(err) {
+					return nil, err
+				}
+				continue
+			}
+
+			deploymentProcesses = append(deploymentProcesses, runbookProcess.Steps...)
+		}
+	}
+
+	return deploymentProcesses, nil
+}
+
 // naiveStepVariableScan does a simple text search for the variable in a steps properties. This does lead to false positives as simple variables names, like "a",
 // will almost certainly appear in a step property text without necessarily being referenced as a variable.
-func (o OctopusUnusedVariablesCheck) naiveStepVariableScan(deploymentProcess *deployments.DeploymentProcess, variable *variables.Variable) bool {
-	if deploymentProcess != nil {
-		for _, s := range deploymentProcess.Steps {
+func (o OctopusUnusedVariablesCheck) naiveStepVariableScan(deploymentSteps []*deployments.DeploymentStep, variable *variables.Variable) bool {
+	if deploymentSteps != nil {
+		for _, s := range deploymentSteps {
 			for _, a := range s.Actions {
 				for _, p := range a.Properties {
 					if strings.Index(p.Value, variable.Name) != -1 {
