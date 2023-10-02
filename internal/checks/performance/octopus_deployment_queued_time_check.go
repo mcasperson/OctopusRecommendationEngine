@@ -80,7 +80,14 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 	}
 
 	deploymentLinks := lo.Map(deployments, func(item deploymentInfo, index int) string {
-		return o.url + "/app#/" + o.space + "/deployments/" + item.deploymentId + " (" + fmt.Sprint(item.toFixed(1)) + "m)"
+		deployment, err := o.client.Deployments.GetByID(item.deploymentId)
+
+		if err != nil {
+			return item.deploymentId + " (" + fmt.Sprint(item.toFixed(1)) + "m)"
+		}
+
+		return o.url + "/app#/" + o.space + "/projects/" + deployment.ProjectID + "/deployments/releases/" + deployment.ReleaseID +
+			"/deployments/" + item.deploymentId + " (" + fmt.Sprint(item.toFixed(1)) + "m)"
 	})
 
 	if len(deployments) >= maxQueuedTasks {
