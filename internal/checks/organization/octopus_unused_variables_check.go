@@ -135,10 +135,10 @@ func (o OctopusUnusedVariablesCheck) getDeploymentSteps(p *projects2.Project) ([
 					return nil, err
 				}
 				continue
-			}
-
-			if runbookProcess != nil && runbookProcess.Steps != nil {
-				deploymentProcesses = append(deploymentProcesses, runbookProcess.Steps...)
+			} else {
+				if runbookProcess != nil && runbookProcess.Steps != nil {
+					deploymentProcesses = append(deploymentProcesses, runbookProcess.Steps...)
+				}
 			}
 		}
 	}
