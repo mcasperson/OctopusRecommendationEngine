@@ -9,6 +9,7 @@ import (
 	"github.com/samber/lo"
 	"math"
 	"strings"
+	"time"
 )
 
 const maxQueueTimeMinutes = 1
@@ -17,6 +18,7 @@ const maxQueuedTasks = 10
 type deploymentInfo struct {
 	deploymentId string
 	duration     float64
+	queuedAt     time.Time
 }
 
 func (d deploymentInfo) round(num float64) int {
@@ -71,6 +73,7 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 							deployments = append(deployments, deploymentInfo{
 								deploymentId: queuedDeploymentId,
 								duration:     queueTime.Minutes(),
+								queuedAt:     r.Occurred,
 							})
 						}
 					}
@@ -83,11 +86,11 @@ func (o OctopusDeploymentQueuedTimeCheck) Execute() (checks.OctopusCheckResult, 
 		deployment, err := o.client.Deployments.GetByID(item.deploymentId)
 
 		if err != nil {
-			return item.deploymentId + " (" + fmt.Sprint(item.toFixed(1)) + "m)"
+			return item.deploymentId + " (" + item.queuedAt.Format(time.RFC822) + " " + fmt.Sprint(item.toFixed(1)) + "m)"
 		}
 
 		return o.url + "/app#/" + o.space + "/projects/" + deployment.ProjectID + "/deployments/releases/" + deployment.ReleaseID +
-			"/deployments/" + item.deploymentId + " (" + fmt.Sprint(item.toFixed(1)) + "m)"
+			"/deployments/" + item.deploymentId + " (" + item.queuedAt.Format(time.RFC822) + " " + fmt.Sprint(item.toFixed(1)) + "m)"
 	})
 
 	if len(deployments) >= maxQueuedTasks {
