@@ -27,6 +27,50 @@ data "octopusdeploy_feeds" "built_in_feed" {
   take         = 1
 }
 
+resource "octopusdeploy_project" "project_with_no_process" {
+  auto_create_release                  = false
+  default_guided_failure_mode          = "EnvironmentDefault"
+  default_to_skip_if_already_installed = false
+  description                          = "Test project with no process"
+  discrete_channel_release             = false
+  is_disabled                          = false
+  is_discrete_channel_release          = false
+  is_version_controlled                = false
+  lifecycle_id                         = data.octopusdeploy_lifecycles.lifecycle_default_lifecycle.lifecycles[0].id
+  name                                 = "Test no process"
+  project_group_id                     = data.octopusdeploy_project_groups.default_project_group.project_groups[0].id
+  tenanted_deployment_participation    = "Untenanted"
+  space_id                             = var.octopus_space_id
+  included_library_variable_sets       = []
+  versioning_strategy {
+    template = "#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.LastPatch}.#{Octopus.Version.NextRevision}"
+  }
+
+  connectivity_policy {
+    allow_deployments_to_no_targets = false
+    exclude_unhealthy_targets       = false
+    skip_machine_behavior           = "SkipUnavailableMachines"
+  }
+}
+
+resource "octopusdeploy_runbook" "runbook_no_process" {
+  project_id         = octopusdeploy_project.project_with_no_process.id
+  name               = "Runbook"
+  description        = "Test Runbook"
+  multi_tenancy_mode = "Untenanted"
+  connectivity_policy {
+    allow_deployments_to_no_targets = false
+    exclude_unhealthy_targets       = false
+    skip_machine_behavior           = "SkipUnavailableMachines"
+  }
+  retention_policy {
+    quantity_to_keep = 10
+  }
+  environment_scope           = "Specified"
+  environments                = []
+  default_guided_failure_mode = "EnvironmentDefault"
+  force_package_download      = true
+}
 
 resource "octopusdeploy_project" "deploy_frontend_project" {
   auto_create_release                  = false
