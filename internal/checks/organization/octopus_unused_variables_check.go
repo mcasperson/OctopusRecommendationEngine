@@ -114,7 +114,9 @@ func (o OctopusUnusedVariablesCheck) getDeploymentSteps(p *projects2.Project) ([
 		}
 	}
 
-	deploymentProcesses = append(deploymentProcesses, deploymentProcess.Steps...)
+	if deploymentProcess.Steps != nil {
+		deploymentProcesses = append(deploymentProcesses, deploymentProcess.Steps...)
+	}
 
 	if link, ok := p.Links["Runbooks"]; ok {
 		runbooks, err := newclient.Get[resources.Resources[runbooks.Runbook]](o.client.HttpSession(), linkOptions.ReplaceAllString(link, ""))
@@ -135,7 +137,9 @@ func (o OctopusUnusedVariablesCheck) getDeploymentSteps(p *projects2.Project) ([
 				continue
 			}
 
-			deploymentProcesses = append(deploymentProcesses, runbookProcess.Steps...)
+			if runbookProcess.Steps != nil {
+				deploymentProcesses = append(deploymentProcesses, runbookProcess.Steps...)
+			}
 		}
 	}
 
