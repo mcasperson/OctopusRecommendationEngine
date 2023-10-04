@@ -1,7 +1,9 @@
 name: Go Build
 'on':
   workflow_dispatch: {}
-  push: {}
+  push:
+    paths-ignore:
+      - '.github/workflows/*'
   pull_request: {}
 jobs:
   build:
