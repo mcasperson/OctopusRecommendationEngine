@@ -10,10 +10,12 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SE_TOOL_REQUESTS_WEBHOOK }}
-          SLACK_CHANNEL: general
+          SLACK_CHANNEL: se-tool-requests
           SLACK_COLOR: good
           SLACK_ICON: https://a.storyblok.com/f/92909/x/084296103a/logo-blue_140px_rgb.svg
-          SLACK_MESSAGE: 'Octolint Issue Created'
-          SLACK_TITLE: ${{ github.event.issue.url }}
+          SLACK_MESSAGE: |
+            ${{ github.event.issue.title }}
+            ${{ github.event.issue.url }}
+          SLACK_TITLE: 'Octolint Issue Created'
           SLACK_USERNAME: 'Slack Notification Workflow'
           SLACK_FOOTER: ''
