@@ -19,3 +19,4 @@ jobs:
           SLACK_TITLE: 'Octolint Issue Created'
           SLACK_USERNAME: 'Slack Notification Workflow'
           SLACK_FOOTER: ''
+          MSG_MINIMAL: true
