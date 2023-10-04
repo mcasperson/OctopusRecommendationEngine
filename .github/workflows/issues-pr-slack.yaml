@@ -12,7 +12,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SE_TOOL_REQUESTS_WEBHOOK }}
           SLACK_CHANNEL: se-tool-requests
           SLACK_COLOR: good
-          SLACK_ICON: https://a.storyblok.com/f/92909/x/084296103a/logo-blue_140px_rgb.svg
+          SLACK_ICON: https://a.storyblok.com/f/92909/x/0489b50911/favicon.ico
           SLACK_MESSAGE: |
             ${{ github.event.issue.title }}
             ${{ github.event.issue.url }}
